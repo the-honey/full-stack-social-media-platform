@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String       @id @default(cuid())
+  username       String       @unique
+  email          String       @unique
+  password       String
+  firstName      String
+  lastName       String
+  brithDate      DateTime
+  profilePic     String?
+  userSettings   UserSettings @relation(fields: [userSettingsId], references: [id])
+  posts          Post[]
+  comments       Comment[]
+  reactions      Reaction[]
+  following      Follows[]    @relation("follower")
+  followers      Follows[]    @relation("following")
+  userSettingsId Int
+}
+
+model UserSettings {
+  id       Int      @id @default(autoincrement())
+  language Language
+  user     User[]
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+model Post {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  published Boolean    @default(false)
+  content   String?
+  mediaPath String?
+  author    User       @relation(fields: [userId], references: [id])
+  userId    String
+  comments  Comment[]
+  reactions Reaction[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  author    User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+}
+
+model Reaction {
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now())
+  type      ReactionType
+  author    User         @relation(fields: [userId], references: [id])
+  userId    String
+  Post      Post?        @relation(fields: [postId], references: [id])
+  postId    String?
+}
+
+enum Language {
+  HU
+  EN
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  CARE
+  HAHA
+  WOW
+  SAD
+  ANGRY
+}
