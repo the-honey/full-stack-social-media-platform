@@ -1,0 +1,19 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: prisma
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+    ports:
+      - '5432:5432'
+    
+  adminer:
+    image: adminer:latest
+    depends_on:
+      - postgres
+    restart: always
+    ports:
+      - '80:8080'
