@@ -8,27 +8,27 @@ datasource db {
 }
 
 model User {
-  id             String       @id @default(cuid())
-  username       String       @unique
-  email          String       @unique
-  password       String
-  firstName      String
-  lastName       String
-  brithDate      DateTime
-  profilePic     String?
-  userSettings   UserSettings @relation(fields: [userSettingsId], references: [id])
-  posts          Post[]
-  comments       Comment[]
-  reactions      Reaction[]
-  following      Follows[]    @relation("follower")
-  followers      Follows[]    @relation("following")
-  userSettingsId Int
+  id         String     @id @default(cuid())
+  username   String     @unique
+  email      String     @unique
+  password   String
+  profile    Profile    @relation(fields: [profileId], references: [id])
+  profileId  Int        @unique
+  posts      Post[]
+  comments   Comment[]
+  reactions  Reaction[]
+  followedBy Follows[]  @relation("following")
+  following  Follows[]  @relation("follower")
 }
 
-model UserSettings {
-  id       Int      @id @default(autoincrement())
-  language Language
-  user     User[]
+model Profile {
+  id            Int      @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  description   String?
+  brithDate     DateTime
+  profilePicUrl String?
+  user          User?
 }
 
 model Follows {
@@ -44,11 +44,10 @@ model Post {
   id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  published Boolean    @default(false)
   content   String?
-  mediaPath String?
-  author    User       @relation(fields: [userId], references: [id])
-  userId    String
+  media     Media[]
+  author    User       @relation(fields: [authorId], references: [id])
+  authorId  String     @unique
   comments  Comment[]
   reactions Reaction[]
 }
@@ -58,25 +57,28 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   content   String
-  author    User     @relation(fields: [userId], references: [id])
-  userId    String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @unique
   post      Post     @relation(fields: [postId], references: [id])
-  postId    String
+  postId    String   @unique
 }
 
 model Reaction {
   id        String       @id @default(cuid())
   createdAt DateTime     @default(now())
   type      ReactionType
-  author    User         @relation(fields: [userId], references: [id])
-  userId    String
-  Post      Post?        @relation(fields: [postId], references: [id])
-  postId    String?
+  author    User         @relation(fields: [authorId], references: [id])
+  authorId  String
+  post      Post         @relation(fields: [postId], references: [id])
+  postId    String       @unique
 }
 
-enum Language {
-  HU
-  EN
+model Media {
+  id       String    @id @default(uuid())
+  mediaUrl String
+  type     MediaType
+  Post     Post      @relation(fields: [postId], references: [id])
+  postId   String    @unique
 }
 
 enum ReactionType {
@@ -87,4 +89,9 @@ enum ReactionType {
   WOW
   SAD
   ANGRY
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
 }
