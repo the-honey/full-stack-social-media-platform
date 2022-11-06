@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../connect";
+import { prisma } from "../db";
 
 export const register = async (req: Request, res: Response) => {
   //await prisma.user.count({ where: { username: req.body.username } });
