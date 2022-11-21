@@ -19,7 +19,7 @@ export const register = async (
     })
     .then((count) => {
       if (count > 0) {
-        res.status(409).send({ message: "User already exists." });
+        return res.status(409).send({ message: "User already exists." });
       }
 
       // TODO: input validation
@@ -74,7 +74,7 @@ export const login = (req: Request, res: Response) => {
       // @ts-ignore TEMPORARY FIX
       const { password, ...others } = user;
 
-      res
+      return res
         .cookie("accessToken", token, {
           httpOnly: true,
         })
