@@ -14,7 +14,8 @@ model User {
   emailVerification EmailVerification?
   isEmailVerified   Boolean            @default(false)
   password          String
-  profile           Profile?
+  profile           Profile            @relation(fields: [profileId], references: [id])
+  profileId         Int                @unique
   posts             Post[]
   comments          Comment[]
   reactions         Reaction[]
@@ -31,8 +32,8 @@ model EmailVerification {
 }
 
 model Profile {
-  user          User     @relation(fields: [id], references: [id])
-  id            String   @unique
+  id            Int      @id @default(autoincrement())
+  user          User?
   firstName     String
   lastName      String
   description   String?
