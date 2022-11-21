@@ -7,6 +7,7 @@ dotenv.config();
 const app: Application = express();
 
 import authRoutes from "./routes/auth";
+import postRoutes from "./routes/posts";
 
 app.use(express.json());
 app.use(cors());
@@ -17,6 +18,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/post", postRoutes);
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("The API has started.");
