@@ -1,5 +1,5 @@
 # Media files
-src/api/media/
+src/client/public/upload
 
 # Logs
 logs
