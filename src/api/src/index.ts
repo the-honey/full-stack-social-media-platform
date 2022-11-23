@@ -11,6 +11,7 @@ const app: Application = express();
 import authRoutes from "./routes/auth";
 import postRoutes from "./routes/posts";
 import commentRoutes from "./routes/comments";
+import reactionRoutes from "./routes/reactions";
 
 app.use(express.json());
 app.use(cors());
@@ -49,6 +50,7 @@ app.post(
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/reactions", reactionRoutes);
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("The API has started.");
