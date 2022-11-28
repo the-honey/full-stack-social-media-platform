@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
     "sourceMap": true,
+    "target": "es5",
     "outDir": "dist",
     "strict": true,
     "lib": ["esnext"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/resources/*": ["resources/*"],
+      "@/utils/*": ["utils/*"],
+      "@/middlewares/*": ["middlewares/*"]
+    }
   },
   "exclude": ["dist", "prisma", "tests"]
 }

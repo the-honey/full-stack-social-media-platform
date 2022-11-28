@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: prisma
     ports:
       - '5432:5432'
-    
+
   adminer:
     image: adminer:latest
     depends_on:
