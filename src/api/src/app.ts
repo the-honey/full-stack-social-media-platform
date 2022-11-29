@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 //import compression from 'compression';
 import cors from 'cors';
-//import morgan from 'morgan';
+import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import Controller from '@/utils/interfaces/controller.interface';
 import ErrorMiddleware from '@/middlewares/error.middleware';
@@ -24,7 +24,7 @@ class App {
     this.express.use(helmet());
     this.express.use(cors());
     this.express.use(cookieParser());
-    //this.express.use(morgan('dev'));
+    this.express.use(morgan('dev'));
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: false }));
     //this.express.use(compression());

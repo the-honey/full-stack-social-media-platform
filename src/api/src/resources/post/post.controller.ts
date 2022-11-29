@@ -1,10 +1,11 @@
-import Controller from '@/utils/interfaces/controller.interface';
 import { NextFunction, Request, Response, Router } from 'express';
+import { HTTPCodes } from '@/utils/helpers/response';
+import Controller from '@/utils/interfaces/controller.interface';
 import PostService from '@/resources/post/post.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/post/post.validation';
-import { HTTPCodes } from '@/utils/helpers/response';
+import verifiedMiddleware from '@/middlewares/verified.middleware';
 
 class PostController implements Controller {
   public path = '/post';
@@ -20,19 +21,27 @@ class PostController implements Controller {
 
     this.router.post(
       this.path,
-      [authenticatedMiddleware, validationMiddleware(validation.createPost)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.createPost),
+      ],
       this.createPost
     );
 
     this.router.delete(
       this.path + '/:postId',
-      [authenticatedMiddleware],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.deletePost
     );
 
     this.router.patch(
       this.path + '/:postId',
-      [authenticatedMiddleware, validationMiddleware(validation.editPost)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.editPost),
+      ],
       this.editPost
     );
   }

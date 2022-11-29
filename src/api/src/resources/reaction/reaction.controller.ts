@@ -1,10 +1,11 @@
-import Controller from '@/utils/interfaces/controller.interface';
 import { NextFunction, Request, Response, Router } from 'express';
+import { HTTPCodes } from '@/utils/helpers/response';
+import Controller from '@/utils/interfaces/controller.interface';
 import ReactionService from '@/resources/reaction/reaction.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/reaction/reaction.validation';
-import { HTTPCodes } from '@/utils/helpers/response';
+import verifiedMiddleware from '@/middlewares/verified.middleware';
 
 class ReactionController implements Controller {
   public path = '/reaction/:postId';
@@ -18,13 +19,17 @@ class ReactionController implements Controller {
   private initialiseRoutes() {
     this.router.post(
       this.path,
-      [authenticatedMiddleware, validationMiddleware(validation.addReaction)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.addReaction),
+      ],
       this.addReaction
     );
 
     this.router.delete(
       this.path,
-      [authenticatedMiddleware],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.removeReaction
     );
   }

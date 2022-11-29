@@ -3,6 +3,7 @@ import { HTTPCodes } from '@/utils/helpers/response';
 import Controller from '@/utils/interfaces/controller.interface';
 import FollowService from '@/resources/follow/follow.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
+import verifiedMiddleware from '@/middlewares/verified.middleware';
 
 class FollowController implements Controller {
   public path = '/follow';
@@ -16,13 +17,13 @@ class FollowController implements Controller {
   private initialiseRoutes() {
     this.router.post(
       this.path + '/:username',
-      [authenticatedMiddleware],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.follow
     );
 
     this.router.delete(
       this.path + '/:username',
-      [authenticatedMiddleware],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.unfollow
     );
   }

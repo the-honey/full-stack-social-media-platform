@@ -1,0 +1,62 @@
+import { NextFunction, Request, Response, Router } from 'express';
+import { HTTPCodes } from '@/utils/helpers/response';
+import Controller from '@/utils/interfaces/controller.interface';
+import VerificationService from '@/resources/verification/verification.service';
+import authenticatedMiddleware from '@/middlewares/auth.middleware';
+
+class VerificationController implements Controller {
+  public path = '/verify';
+  public router = Router();
+  private VerificationService = new VerificationService();
+
+  constructor() {
+    this.initialiseRoutes();
+  }
+
+  private initialiseRoutes() {
+    this.router.get(this.path + '/:token', this.verify);
+
+    this.router.post(
+      this.path,
+      [authenticatedMiddleware],
+      this.getVerification
+    );
+  }
+
+  private verify = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { token } = req.params;
+
+      const verify = await this.VerificationService.verify(token);
+
+      return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  private getVerification = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { user } = res.locals;
+
+      const verification =
+        await this.VerificationService.createEmailVerification(user.id);
+
+      return res
+        .status(HTTPCodes.OK)
+        .json({ message: 'Successful', verification });
+    } catch (error) {
+      return next(error);
+    }
+  };
+}
+
+export default VerificationController;
