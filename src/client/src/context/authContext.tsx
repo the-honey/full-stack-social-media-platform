@@ -1,14 +1,26 @@
 import axios from 'axios';
-import { createContext, useEffect, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useContext,
+} from 'react';
 import { useLocalStorage } from '@/hooks/userLocalStorage';
-
-type AuthProviderProps = {
-  children: ReactNode;
-};
 
 export type LoginData = {
   username: string;
   password: string;
+};
+
+export type RegisterData = {
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  birthDate: Date;
+  password: string;
+  confirmPassword: string;
 };
 
 type UserData = {
@@ -19,17 +31,28 @@ type UserData = {
   profileId: number;
 };
 
-type AuthContext = {
-  login: (inputs: LoginData) => Promise<void>;
-  currentUser: UserData;
+type AuthContextType = {
+  currentUser?: UserData;
+  login: (inputs: LoginData) => void;
+  register: (inputs: RegisterData) => void;
 };
 
-export const AuthContext = createContext({} as AuthContext);
+export default function useAuth() {
+  return useContext(AuthContext);
+}
 
-export const AuthContextProvider = ({ children }: AuthProviderProps) => {
+export const AuthContext = createContext<AuthContextType>(
+  {} as AuthContextType
+);
+
+export const AuthProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element => {
   const [currentUser, setCurrentUser] = useLocalStorage<UserData>('user', null);
 
-  const login = async (inputs: LoginData) => {
+  async function login(inputs: LoginData) {
     console.log(inputs);
     const res = await axios.post(
       'http://localhost:3000/api/auth/login',
@@ -42,10 +65,20 @@ export const AuthContextProvider = ({ children }: AuthProviderProps) => {
     const data: UserData = res.data.user;
 
     setCurrentUser(data);
-  };
+  }
+
+  async function register(inputs: RegisterData) {
+    const res = await axios.post(
+      'http://localhost:3000/api/auth/register',
+      inputs,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 
   return (
-    <AuthContext.Provider value={{ currentUser, login }}>
+    <AuthContext.Provider value={{ currentUser, login, register }}>
       {children}
     </AuthContext.Provider>
   );
