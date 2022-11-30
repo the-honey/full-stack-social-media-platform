@@ -8,6 +8,7 @@ import AuthController from '@/resources/auth/auth.controller';
 import ReactionController from '@/resources/reaction/reaction.controller';
 import CommentController from '@/resources/comment/comment.controller';
 import FollowController from '@/resources/follow/follow.controller';
+import VerificationController from './resources/verification/verification.controller';
 
 validateEnv();
 
@@ -19,6 +20,7 @@ const app = new App(
     new UserController(),
     new AuthController(),
     new FollowController(),
+    new VerificationController(),
   ],
   Number(process.env.PORT)
 );

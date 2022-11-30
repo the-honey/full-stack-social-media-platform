@@ -5,6 +5,7 @@ import CommentService from '@/resources/comment/comment.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/comment/comment.validation';
+import verifiedMiddleware from '@/middlewares/verified.middleware';
 
 class CommentController implements Controller {
   public path = '/comment';
@@ -20,19 +21,27 @@ class CommentController implements Controller {
 
     this.router.post(
       this.path + '/:postId',
-      [authenticatedMiddleware, validationMiddleware(validation.addComment)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.addComment),
+      ],
       this.addComment
     );
 
     this.router.patch(
       this.path + '/:commentId',
-      [authenticatedMiddleware, validationMiddleware(validation.editComment)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.editComment),
+      ],
       this.editComment
     );
 
     this.router.delete(
       this.path + '/:commentId',
-      [authenticatedMiddleware],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.deleteComment
     );
   }
@@ -64,6 +73,8 @@ class CommentController implements Controller {
       const { user } = res.locals;
       const { postId } = req.params;
       const { content } = req.body;
+
+      console.log(user);
 
       const comment = await this.CommentService.addComment(
         user.id,
