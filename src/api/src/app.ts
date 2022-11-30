@@ -22,11 +22,13 @@ class App {
 
   private initialiseMiddleware(): void {
     this.express.use(helmet());
-    this.express.use(cors());
+    this.express.use(
+      cors({ credentials: true, origin: 'http://localhost:5000' })
+    );
     this.express.use(cookieParser());
     this.express.use(morgan('dev'));
     this.express.use(express.json());
-    this.express.use(express.urlencoded({ extended: false }));
+    this.express.use(express.urlencoded({ extended: true }));
     //this.express.use(compression());
   }
 
