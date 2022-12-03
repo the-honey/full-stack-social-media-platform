@@ -3,8 +3,8 @@ import Joi from 'joi';
 const register = Joi.object({
   username: Joi.string().alphanum().min(5).max(16).required(),
   email: Joi.string().email().required(),
-  firstName: Joi.string().alphanum().min(2).max(30).required(),
-  lastName: Joi.string().alphanum().min(2).max(30).required(),
+  firstName: Joi.string().regex(/\D+/).min(2).max(30).required(),
+  lastName: Joi.string().regex(/\D+/).min(2).max(30).required(),
   birthDate: Joi.date().required(),
   password: Joi.string().min(8).max(16).required(),
   passwordConfirm: Joi.string()

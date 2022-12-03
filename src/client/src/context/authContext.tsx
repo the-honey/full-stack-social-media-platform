@@ -22,7 +22,7 @@ export type RegisterData = {
   lastName: string;
   birthDate: Date;
   password: string;
-  confirmPassword: string;
+  passwordConfirm: string;
 };
 
 type UserData = {
@@ -34,11 +34,12 @@ type UserData = {
 };
 
 type AuthContextType = {
-  currentUser?: UserData;
+  currentUser?: UserData | null;
   error?: any;
   loading: boolean;
   login: (inputs: LoginData) => void;
   register: (inputs: RegisterData) => void;
+  logout: () => void;
 };
 
 export default function useAuth() {
@@ -54,7 +55,10 @@ export const AuthProvider = ({
 }: {
   children: ReactNode;
 }): JSX.Element => {
-  const [currentUser, setCurrentUser] = useLocalStorage<UserData>('user', null);
+  const [currentUser, setCurrentUser] = useLocalStorage<UserData | null>(
+    'user',
+    null
+  );
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -105,6 +109,25 @@ export const AuthProvider = ({
       .finally(() => setLoading(false));
   }
 
+  async function logout() {
+    setLoading(true);
+
+    axios
+      .post('http://localhost:3000/api/auth/register', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setCurrentUser(null);
+        navigate('/login');
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          setError(err.response?.data);
+        }
+      })
+      .finally(() => setLoading(false));
+  }
+
   const memoedValue = useMemo(
     () => ({
       currentUser,
@@ -112,6 +135,7 @@ export const AuthProvider = ({
       error,
       login,
       register,
+      logout,
     }),
     [currentUser, loading, error]
   );

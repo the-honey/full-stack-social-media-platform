@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { db } from '@/utils/db';
 import jwt from 'jsonwebtoken';
 import createError from '@/utils/helpers/createError';
+import HttpException from '@/utils/exceptions/http.exception';
 
 class PostService {
   public async getPosts(userId: string) {
@@ -72,7 +73,9 @@ class PostService {
 
       return deleted;
     } catch (error) {
-      throw createError.InternalServerError();
+      if (error instanceof HttpException) throw error;
+
+      throw error;
     }
   }
 

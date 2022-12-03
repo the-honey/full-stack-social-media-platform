@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import useAuth, { RegisterData } from '@/context/authContext';
 
 const Register = () => {
-  const [inputs, setInputs] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: '',
-  });
-  const [err, setErr] = useState(null);
+  const [inputs, setInputs] = useState({} as RegisterData);
+
+  const { login, error, loading, register } = useAuth();
 
   const handleChange = (e: any) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -18,16 +13,8 @@ const Register = () => {
 
   const handleClick = async (e: any) => {
     e.preventDefault();
-
-    try {
-      await axios.post('http://localhost:8800/api/auth/register', inputs);
-    } catch (err: any) {
-      //setErr(err.response.data);
-      console.log(err.response);
-    }
+    register(inputs);
   };
-
-  console.log(err);
 
   return (
     <div className="h-screen bg-green-300 flex items-center justify-center">
@@ -68,7 +55,7 @@ const Register = () => {
             <input
               className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
               type="date"
-              name="birthdate"
+              name="birthDate"
               required
               onChange={handleChange}
             />
@@ -100,11 +87,11 @@ const Register = () => {
               className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
               type="password"
               placeholder="Confirm Password"
-              name="confirmpassword"
+              name="passwordConfirm"
               required
               onChange={handleChange}
             />
-            {err && err}
+            {error?.message && <p className="text-red-600">{error.message}</p>}
             <button
               className="w-1/2 p-3 border-none bg-slate-500 text-white cursor-pointer font-bold rounded-lg"
               onClick={handleClick}
