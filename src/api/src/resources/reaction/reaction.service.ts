@@ -37,6 +37,27 @@ class ReactionService {
       throw createError.InternalServerError();
     }
   }
+
+  public async getReactions(userId: string, postId: string) {
+    try {
+      const post = await db.post.findFirst({
+        include: { _count: { select: { reactions: true } } },
+        where: { id: postId },
+      });
+
+      const reaction = await db.reaction.findFirst({
+        where: { authorId: userId, postId: postId },
+      });
+
+      if (!post) throw createError.NotFound();
+
+      return { reactions: post._count.reactions, reaction: reaction };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+
+      throw createError.InternalServerError();
+    }
+  }
 }
 
 export default ReactionService;

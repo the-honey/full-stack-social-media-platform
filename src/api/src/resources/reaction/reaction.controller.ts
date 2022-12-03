@@ -32,6 +32,12 @@ class ReactionController implements Controller {
       [authenticatedMiddleware, verifiedMiddleware()],
       this.removeReaction
     );
+
+    this.router.get(
+      this.path,
+      [authenticatedMiddleware, verifiedMiddleware()],
+      this.getReactions
+    );
   }
 
   private addReaction = async (
@@ -68,6 +74,30 @@ class ReactionController implements Controller {
       await this.ReactionService.removeReaction(user.id, postId);
 
       return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  private getReactions = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { user } = res.locals;
+      const { postId } = req.params;
+
+      const reactions = await this.ReactionService.getReactions(
+        user.id,
+        postId
+      );
+
+      return res.status(HTTPCodes.OK).json({
+        message: 'Successful',
+        reactionCount: reactions.reactions,
+        userReaction: reactions.reaction,
+      });
     } catch (error) {
       return next(error);
     }
