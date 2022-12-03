@@ -39,8 +39,6 @@ async function authenticatedMiddleware(
 
     return next();
   } catch (error) {
-    if (error instanceof HttpException) throw error;
-
     return next(createError.Unauthorised());
   }
 }
