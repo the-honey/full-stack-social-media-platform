@@ -13,21 +13,29 @@ class PostService {
 
       const posts = await db.post.findMany({
         where: {
-          authorId: { in: following.map((user) => user.following.id) },
+          authorId: {
+            in: [userId, ...following.map((user) => user.following.id)],
+          },
         },
-        select: {
-          content: true,
-          createdAt: true,
-          updatedAt: true,
+        include: {
           media: true,
           author: {
             select: {
+              id: true,
               username: true,
               profile: { select: { profilePicUrl: true } },
             },
+          } /*,
+          _count: {
+            select: { reactions: true },
           },
+          reactions: { include: {author: {select:{_count:{select:{reactions:true}}}}},where: {} },*/,
         },
         orderBy: { createdAt: 'desc' },
+      });
+
+      const reactions = await db.reaction.count({
+        where: { authorId: { in: posts.map((post) => post.id) } },
       });
 
       return posts;
@@ -49,15 +57,20 @@ class PostService {
     }
   }
 
-  public async deletePost(postId: string) {
+  public async deletePost(userId: string, postId: string) {
     try {
-      const post = await db.post.delete({
+      const post = await db.post.findFirst({ where: { id: postId } });
+
+      if (!post) throw createError.NotFound();
+      else if (post.authorId != userId) throw createError.Forbidden();
+
+      const deleted = await db.post.delete({
         where: {
           id: postId,
         },
       });
 
-      return post;
+      return deleted;
     } catch (error) {
       throw createError.InternalServerError();
     }
@@ -66,7 +79,6 @@ class PostService {
   public async editPost(userId: string, postId: string, content: string) {
     try {
       const author = await db.post.findFirst({
-        select: { authorId: true },
         where: { authorId: userId, id: postId },
       });
 

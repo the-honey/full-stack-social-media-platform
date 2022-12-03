@@ -87,9 +87,10 @@ class PostController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
+      const { user } = res.locals;
       const { postId } = req.params;
 
-      const post = await this.PostService.deletePost(postId);
+      const post = await this.PostService.deletePost(user.id, postId);
 
       return res.status(HTTPCodes.OK).json({ message: 'Successful', post });
     } catch (error) {
