@@ -8,6 +8,7 @@ class AuthService {
   public async login(username: string, password: string): Promise<any> {
     try {
       const user = await db.user.findFirst({
+        include: { profile: true },
         where: { username: username },
       });
 
