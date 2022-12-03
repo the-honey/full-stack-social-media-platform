@@ -6,10 +6,7 @@ class CommentService {
   public async getComments(postId: string) {
     try {
       const comments = await db.comment.findMany({
-        select: {
-          content: true,
-          createdAt: true,
-          updatedAt: true,
+        include: {
           author: {
             select: {
               username: true,
@@ -18,7 +15,7 @@ class CommentService {
           },
         },
         where: { postId: postId },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: 'desc' },
       });
 
       return comments;
