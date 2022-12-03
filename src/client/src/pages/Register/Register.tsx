@@ -31,7 +31,7 @@ const Register = () => {
 
   return (
     <div className="h-screen bg-green-300 flex items-center justify-center">
-      <div className="w-1/2 flex flex-row-reverse bg-white rounded-lg min-h-[600px] overflow-hidden">
+      <div className="w-1/2 flex flex-row-reverse bg-white rounded-lg min-h-[600px] overflow-hidden shadow-xl">
         <div className="flex-1 bg-gradient-to-bl from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
           <h1 className="text-7xl font-bold">Very Social Platform.</h1>
           <p>

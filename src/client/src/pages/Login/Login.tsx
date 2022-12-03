@@ -1,36 +1,26 @@
-import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useAuth from '@/context/authContext';
-import { AuthContext } from '@/context/authContext';
 
 const Login = () => {
   const [inputs, setInputs] = useState({
     username: '',
     password: '',
   });
-  const [err, setErr] = useState(null);
-
-  const navigate = useNavigate();
 
   const handleChange = (e: any) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const { login } = useAuth();
+  const { login, error, loading } = useAuth();
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    try {
-      await login(inputs);
-      navigate('/');
-    } catch (err: any) {
-      setErr(err);
-      //console.log(err);
-    }
+    login(inputs);
   };
 
   return (
     <div className="h-screen bg-green-300 flex items-center justify-center">
-      <div className="w-1/2 flex bg-white rounded-xl min-h-[600px] overflow-hidden">
+      <div className="w-1/2 flex bg-white rounded-xl min-h-[600px] overflow-hidden shadow-xl">
         <div className="flex-1 bg-gradient-to-br from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
           <h1 className="text-8xl font-bold">Hello World.</h1>
           <p>
@@ -62,10 +52,11 @@ const Login = () => {
               name="password"
               onChange={handleChange}
             />
-            {err && err}
+            {error?.message && <p className="text-red-600">{error.message}</p>}
             <button
               className="w-1/2 p-3 border-none bg-slate-500 text-white cursor-pointer font-bold rounded-lg"
               onClick={handleLogin}
+              disabled={loading}
             >
               Login
             </button>

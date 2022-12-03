@@ -1,12 +1,14 @@
-import axios from 'axios';
+import axios, { Axios, AxiosError } from 'axios';
 import {
   createContext,
+  useMemo,
   useEffect,
   useState,
   ReactNode,
   useContext,
 } from 'react';
 import { useLocalStorage } from '@/hooks/userLocalStorage';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export type LoginData = {
   username: string;
@@ -28,11 +30,13 @@ type UserData = {
   username: string;
   email: string;
   isEmailVerified: boolean;
-  profileId: number;
+  profile: { firstName: string; lastName: string; profilePicUrl: string };
 };
 
 type AuthContextType = {
   currentUser?: UserData;
+  error?: any;
+  loading: boolean;
   login: (inputs: LoginData) => void;
   register: (inputs: RegisterData) => void;
 };
@@ -51,35 +55,68 @@ export const AuthProvider = ({
   children: ReactNode;
 }): JSX.Element => {
   const [currentUser, setCurrentUser] = useLocalStorage<UserData>('user', null);
+  const [error, setError] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // If we change page, reset the error state.
+  useEffect(() => {
+    if (error) setError(null);
+  }, [location.pathname]);
 
   async function login(inputs: LoginData) {
     console.log(inputs);
-    const res = await axios.post(
-      'http://localhost:3000/api/auth/login',
-      inputs,
-      {
+    setLoading(true);
+
+    axios
+      .post('http://localhost:3000/api/auth/login', inputs, {
         withCredentials: true,
-      }
-    );
-
-    const data: UserData = res.data.user;
-
-    setCurrentUser(data);
+      })
+      .then((res) => {
+        const { user } = res.data;
+        setCurrentUser(user);
+        navigate('/');
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) setError(err.response?.data);
+      })
+      .finally(() => setLoading(false));
   }
 
   async function register(inputs: RegisterData) {
-    const res = await axios.post(
-      'http://localhost:3000/api/auth/register',
-      inputs,
-      {
+    setLoading(true);
+
+    axios
+      .post('http://localhost:3000/api/auth/register', inputs, {
         withCredentials: true,
-      }
-    );
+      })
+      .then((res) => {
+        const { user } = res.data;
+        setCurrentUser(user);
+        navigate('/');
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          setError(err.response?.data);
+        }
+      })
+      .finally(() => setLoading(false));
   }
 
+  const memoedValue = useMemo(
+    () => ({
+      currentUser,
+      loading,
+      error,
+      login,
+      register,
+    }),
+    [currentUser, loading, error]
+  );
+
   return (
-    <AuthContext.Provider value={{ currentUser, login, register }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>
   );
 };
