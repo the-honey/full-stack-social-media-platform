@@ -22,7 +22,7 @@ export type RegisterData = {
   lastName: string;
   birthDate: Date;
   password: string;
-  confirmPassword: string;
+  passwordConfirm: string;
 };
 
 type UserData = {
@@ -34,7 +34,7 @@ type UserData = {
 };
 
 type AuthContextType = {
-  currentUser?: UserData;
+  currentUser?: UserData | null;
   error?: any;
   loading: boolean;
   login: (inputs: LoginData) => void;
@@ -55,7 +55,10 @@ export const AuthProvider = ({
 }: {
   children: ReactNode;
 }): JSX.Element => {
-  const [currentUser, setCurrentUser] = useLocalStorage<UserData>('user', null);
+  const [currentUser, setCurrentUser] = useLocalStorage<UserData | null>(
+    'user',
+    null
+  );
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
