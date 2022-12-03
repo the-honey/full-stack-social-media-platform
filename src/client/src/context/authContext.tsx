@@ -39,6 +39,7 @@ type AuthContextType = {
   loading: boolean;
   login: (inputs: LoginData) => void;
   register: (inputs: RegisterData) => void;
+  logout: () => void;
 };
 
 export default function useAuth() {
@@ -105,6 +106,25 @@ export const AuthProvider = ({
       .finally(() => setLoading(false));
   }
 
+  async function logout() {
+    setLoading(true);
+
+    axios
+      .post('http://localhost:3000/api/auth/register', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setCurrentUser(null);
+        navigate('/login');
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          setError(err.response?.data);
+        }
+      })
+      .finally(() => setLoading(false));
+  }
+
   const memoedValue = useMemo(
     () => ({
       currentUser,
@@ -112,6 +132,7 @@ export const AuthProvider = ({
       error,
       login,
       register,
+      logout,
     }),
     [currentUser, loading, error]
   );
