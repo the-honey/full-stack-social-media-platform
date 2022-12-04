@@ -1,9 +1,10 @@
 import Post from '@/components/Post';
 import { useQuery } from '@tanstack/react-query';
 import { makeRequest } from '../axios';
+import useAuth from '@/context/authContext';
 
 const Posts = ({ username }: any) => {
-  const { isLoading, error, data } = useQuery(['posts_' + username], () =>
+  const { isLoading, error, data } = useQuery(['posts'], () =>
     makeRequest.get('/post/' + (username ?? '')).then((res) => {
       return res.data;
     })
