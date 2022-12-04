@@ -33,11 +33,7 @@ class ReactionController implements Controller {
       this.removeReaction
     );
 
-    this.router.get(
-      this.path,
-      [authenticatedMiddleware, verifiedMiddleware()],
-      this.getReactions
-    );
+    this.router.get(this.path, [authenticatedMiddleware], this.getReactions);
   }
 
   private addReaction = async (

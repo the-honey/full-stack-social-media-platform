@@ -29,7 +29,7 @@ class FollowController implements Controller {
 
     this.router.get(
       this.path + '/:username',
-      [authenticatedMiddleware, verifiedMiddleware()],
+      [authenticatedMiddleware],
       this.isFollowing
     );
   }
