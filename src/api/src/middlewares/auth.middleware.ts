@@ -29,6 +29,7 @@ async function authenticatedMiddleware(
         username: true,
         email: true,
         isEmailVerified: true,
+        profileId: true,
       },
       where: { id: payload.id },
     });
