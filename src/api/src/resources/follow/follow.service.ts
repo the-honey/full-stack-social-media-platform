@@ -3,6 +3,22 @@ import HttpException from '@/utils/exceptions/http.exception';
 import createError from '@/utils/helpers/createError';
 
 class FollowService {
+  public async isFollowing(userId: string, username: string) {
+    try {
+      const following = await db.user.findFirst({
+        where: {
+          username: username,
+          followedBy: { some: { followerId: userId } },
+        },
+      });
+
+      return following != null;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+
+      throw createError.InternalServerError();
+    }
+  }
   public async follow(userId: string, username: string) {
     try {
       const following = await db.user.findFirst({
