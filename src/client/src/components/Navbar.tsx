@@ -6,11 +6,13 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@/assets/person.png';
 import { Link } from 'react-router-dom';
 import useAuth from '@/context/authContext';
 
 const Navbar = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   return (
     <div className="shadow-md flex items-center justify-center py-3 px-5 h-13 sticky top-0 bg-white color-black z-50">
@@ -33,13 +35,12 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3 font-medium">
             <img
               className="w-8 h-8"
-              src={
-                currentUser?.profile.profilePicUrl ?? './src/assets/person.png'
-              }
+              src={currentUser?.profile.profilePicUrl ?? PersonIcon}
               alt=""
             />
             <span>{currentUser?.username}</span>
           </div>
+          <LogoutIcon className="cursor-pointer" onClick={() => logout()} />
         </div>
       </div>
     </div>
