@@ -3,12 +3,13 @@ import useAuth from '@/context/authContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { makeRequest } from '../axios';
 import Comment from './Comment';
+import PersonIcon from '@/assets/person.png';
 
 const Comments = ({ postId }: any) => {
   const [desc, setDesc] = useState('');
   const { currentUser } = useAuth();
 
-  const { isLoading, error, data } = useQuery(['comments'], () =>
+  const { isLoading, error, data } = useQuery(['post_' + postId], () =>
     makeRequest.get('/comment/' + postId).then((res) => {
       return res.data.comments;
     })
@@ -23,7 +24,7 @@ const Comments = ({ postId }: any) => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(['comments']);
+        queryClient.invalidateQueries(['post_' + postId]);
       },
     }
   );
@@ -39,7 +40,7 @@ const Comments = ({ postId }: any) => {
       <div className="flex items-center justify-between gap-5 my-5">
         <img
           className="w-10 h-10 rounded-full object-cover"
-          src={currentUser?.profile.profilePicUrl ?? './src/assets/person.png'}
+          src={currentUser?.profile.profilePicUrl ?? PersonIcon}
           alt=""
         />
         <input
@@ -50,7 +51,7 @@ const Comments = ({ postId }: any) => {
           onChange={(e) => setDesc(e.target.value)}
         />
         <button
-          className="border-none bg-green-500 text-white py-2 px-5 cursor-pointer rounded-lg"
+          className="border-none bg-green-500 text-white py-2 px-5 cursor-pointer rounded-2xl font-bold"
           onClick={handleClick}
         >
           Send

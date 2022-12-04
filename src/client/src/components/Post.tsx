@@ -3,6 +3,7 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import TextsmsOutlinedIcon from '@mui/icons-material/TextsmsOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PersonIcon from '@/assets/person.png';
 import Comments from '@/components/Comments';
 import { useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
@@ -64,9 +65,7 @@ function Post({ post }: any) {
           <div className="flex gap-2">
             <img
               className="w-10 h-10 rounded-full object-cover"
-              src={
-                post.author.profile.profilePicUrl ?? './src/assets/person.png'
-              }
+              src={post.author.profile.profilePicUrl ?? PersonIcon}
               alt=""
             />
             <div className="flex flex-col">
@@ -85,10 +84,10 @@ function Post({ post }: any) {
           />
           {menuOpen && post.author.id === currentUser?.id && (
             <button
-              className="absolute top-7 right-0 border-none rounded-xl px-3 bg-red-500 p-1 cursor-pointer text-white"
+              className="absolute top-7 right-0 border-none rounded-2xl px-3 bg-red-500 p-1 cursor-pointer text-white font-bold"
               onClick={handleDelete}
             >
-              delete
+              Delete
             </button>
           )}
         </div>
@@ -120,10 +119,6 @@ function Post({ post }: any) {
           >
             <TextsmsOutlinedIcon />
             See Comments
-          </div>
-          <div className="flex align-center gap-2 cursor-pointer text-sm">
-            <ShareOutlinedIcon />
-            Share
           </div>
         </div>
         {commentOpen && <Comments postId={post.id} />}

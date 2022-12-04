@@ -5,7 +5,36 @@ import createError from '@/utils/helpers/createError';
 import HttpException from '@/utils/exceptions/http.exception';
 
 class PostService {
-  public async getPosts(userId: string) {
+  public async getPosts(username: string) {
+    try {
+      const user = await db.user.findFirst({
+        select: {
+          posts: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  profile: { select: { profilePicUrl: true } },
+                },
+              },
+            },
+            orderBy: { createdAt: 'desc' },
+          },
+        },
+        where: { username: username },
+      });
+
+      if (!user) throw createError.NotFound();
+
+      return user.posts;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+
+      throw createError.InternalServerError();
+    }
+  }
+  public async getFeed(userId: string) {
     try {
       const following = await db.follows.findMany({
         select: { following: { select: { id: true } } },

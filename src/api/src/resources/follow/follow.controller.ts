@@ -26,7 +26,32 @@ class FollowController implements Controller {
       [authenticatedMiddleware, verifiedMiddleware()],
       this.unfollow
     );
+
+    this.router.get(
+      this.path + '/:username',
+      [authenticatedMiddleware, verifiedMiddleware()],
+      this.isFollowing
+    );
   }
+
+  private isFollowing = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { user } = res.locals;
+      const { username } = req.params;
+
+      const follow = await this.FollowService.isFollowing(user.id, username);
+
+      return res
+        .status(HTTPCodes.OK)
+        .json({ message: 'Successful', isFollowing: follow });
+    } catch (error) {
+      return next(error);
+    }
+  };
 
   private follow = async (
     req: Request,

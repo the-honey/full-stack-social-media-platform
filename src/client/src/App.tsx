@@ -5,6 +5,7 @@ import Home from '@/pages/Home/Home';
 import Navbar from '@/components/Navbar';
 import LeftBar from '@/components/LeftBar';
 import RightBar from '@/components/RightBar';
+import Profile from '@/pages/Profile/Profile';
 import { AuthContext, AuthProvider } from '@/context/authContext';
 import useAuth from '@/context/authContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -32,7 +33,7 @@ function App() {
         <div style={{ display: 'flex' }}>
           <LeftBar />
           <div style={{ flex: 6 }}>
-            <Home />
+            <Outlet />
           </div>
           <RightBar />
         </div>
@@ -44,8 +45,12 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<ProtectedRoute />}>
-          <Route path="/" element={<Layout />} />
-          {/*<Route path="/profile/:id" element={<Profile />} />*/}
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+          </Route>
+          <Route element={<Layout />}>
+            <Route path="/profile/:username" element={<Profile />} />
+          </Route>
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

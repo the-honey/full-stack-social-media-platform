@@ -16,7 +16,11 @@ class UserController implements Controller {
   }
 
   private initialiseRoutes() {
-    this.router.get(this.path + '/id/:userId', this.getUser);
+    this.router.get(
+      this.path + '/id/:username',
+      [authenticatedMiddleware],
+      this.getUser
+    );
 
     this.router.patch(
       this.path,
@@ -29,7 +33,28 @@ class UserController implements Controller {
       [authenticatedMiddleware],
       this.getRecommendedUsers
     );
+
+    this.router.get(
+      this.path + '/newest',
+      [authenticatedMiddleware],
+      this.getNewestUsers
+    );
   }
+
+  private getNewestUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { user } = res.locals;
+
+      const users = await this.UserService.getNewestUsers(user.id);
+      return res.status(HTTPCodes.OK).json({ message: 'Successful', users });
+    } catch (error) {
+      return next(error);
+    }
+  };
 
   private getUser = async (
     req: Request,
@@ -37,9 +62,9 @@ class UserController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      const { userId } = req.params;
+      const { username } = req.params;
 
-      const user = await this.UserService.getUser(userId);
+      const user = await this.UserService.getUser(username);
       return res.status(HTTPCodes.OK).json({ message: 'Successful', user });
     } catch (error) {
       return next(error);
@@ -52,9 +77,16 @@ class UserController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      const { userId } = req.params;
+      const { profileId } = res.locals.user;
+      const { firstName, lastName, description, birthDate } = req.body;
 
-      const user = await this.UserService.getUser(userId);
+      const user = await this.UserService.editUser(
+        profileId,
+        firstName,
+        lastName,
+        birthDate,
+        description
+      );
 
       return res.status(HTTPCodes.OK).json({ message: 'Successful', user });
     } catch (error) {

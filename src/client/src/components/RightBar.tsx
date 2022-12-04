@@ -1,4 +1,5 @@
 import useAuth from '@/context/authContext';
+import PersonIcon from '@/assets/person.png';
 
 const RightBar = () => {
   const { currentUser } = useAuth();
@@ -11,7 +12,7 @@ const RightBar = () => {
         <div className="flex items-center gap-3 py-3">
           <img
             className="w-8 h-8 rounded-full object-cover"
-            src={'./src/assets/person.png'}
+            src={PersonIcon}
             alt=""
           />
           <span className="font-medium">placeholder</span>
@@ -22,7 +23,7 @@ const RightBar = () => {
         <div className="flex items-center gap-3 py-3">
           <img
             className="w-8 h-8 rounded-full object-cover"
-            src={'./src/assets/person.png'}
+            src={PersonIcon}
             alt=""
           />
           <span className="font-medium">placeholder</span>
@@ -33,7 +34,7 @@ const RightBar = () => {
         <div className="flex items-center gap-3 py-3">
           <img
             className="w-8 h-8 rounded-full object-cover"
-            src={'./src/assets/person.png'}
+            src={PersonIcon}
             alt=""
           />
           <span className="font-medium">placeholder</span>
@@ -44,7 +45,7 @@ const RightBar = () => {
         <div className="flex items-center gap-3 py-3">
           <img
             className="w-8 h-8 rounded-full object-cover"
-            src={'./src/assets/person.png'}
+            src={PersonIcon}
             alt=""
           />
           <span className="font-medium">placeholder</span>
@@ -55,7 +56,7 @@ const RightBar = () => {
         <div className="flex items-center gap-3 py-3">
           <img
             className="w-8 h-8 rounded-full object-cover"
-            src={'./src/assets/person.png'}
+            src={PersonIcon}
             alt=""
           />
           <span className="font-medium">placeholder</span>

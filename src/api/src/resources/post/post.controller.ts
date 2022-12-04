@@ -17,7 +17,13 @@ class PostController implements Controller {
   }
 
   private initialiseRoutes() {
-    this.router.get(this.path, authenticatedMiddleware, this.getPosts);
+    this.router.get(
+      this.path + '/:username',
+      authenticatedMiddleware,
+      this.getPosts
+    );
+
+    this.router.get(this.path, authenticatedMiddleware, this.getFeed);
 
     this.router.post(
       this.path,
@@ -46,7 +52,7 @@ class PostController implements Controller {
     );
   }
 
-  private getPosts = async (
+  private getFeed = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -54,7 +60,23 @@ class PostController implements Controller {
     try {
       const { user } = res.locals;
 
-      const posts = await this.PostService.getPosts(user.id);
+      const posts = await this.PostService.getFeed(user.id);
+
+      return res.status(HTTPCodes.OK).json({ message: 'Successful', posts });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  private getPosts = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { username } = req.params;
+
+      const posts = await this.PostService.getPosts(username);
 
       return res.status(HTTPCodes.OK).json({ message: 'Successful', posts });
     } catch (error) {

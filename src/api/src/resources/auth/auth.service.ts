@@ -51,7 +51,7 @@ class AuthService {
             create: {
               firstName: firstName,
               lastName: lastName,
-              brithDate: birthDate,
+              birthDate: birthDate,
             },
           },
           //emailVerification: { create: {} },
