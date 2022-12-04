@@ -71,7 +71,6 @@ export const AuthProvider = ({
   }, [location.pathname]);
 
   async function login(inputs: LoginData) {
-    console.log(inputs);
     setLoading(true);
 
     axios
@@ -113,7 +112,7 @@ export const AuthProvider = ({
     setLoading(true);
 
     axios
-      .post('http://localhost:3000/api/auth/register', {
+      .post('http://localhost:3000/api/auth/logout', {
         withCredentials: true,
       })
       .then((res) => {
