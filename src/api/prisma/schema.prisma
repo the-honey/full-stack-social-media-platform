@@ -21,6 +21,7 @@ model User {
   reactions         Reaction[]
   followedBy        Follows[]          @relation("following")
   following         Follows[]          @relation("follower")
+  createdAt         DateTime           @default(now())
 }
 
 model EmailVerification {
@@ -36,7 +37,7 @@ model Profile {
   firstName     String
   lastName      String
   description   String?
-  brithDate     DateTime
+  birthDate     DateTime
   profilePicUrl String?
 }
 
