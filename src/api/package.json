@@ -8,6 +8,9 @@
     "dev": "ts-node-dev --exit-child --respawn src/index.ts",
     "build": "tsc"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "István Mézes",
   "license": "ISC",
@@ -35,12 +38,12 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/morgan": "^1.9.3",
     "@types/multer": "^1.4.7",
-    "@types/node": "^18.11.9",
+    "@types/node": "^18.11.10",
     "prisma": "^4.6.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.1.0",
-    "typescript": "^4.8.4"
+    "typescript": "^4.9.3"
   },
   "_moduleAliases": {
     "@/resources": "dist/resources",
