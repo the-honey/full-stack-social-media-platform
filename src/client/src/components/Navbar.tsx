@@ -18,10 +18,11 @@ const Navbar = () => {
     <div className="shadow-md flex items-center justify-center py-3 px-5 h-13 sticky top-0 bg-white color-black z-50">
       <div className="flex items-center gap-8">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <span className="font-bold text-xl text-black">VerySocial</span>
+          <span className="font-bold text-xl text-black">Very Social</span>
         </Link>
-        <HomeOutlinedIcon />
-        <GridViewOutlinedIcon />
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <HomeOutlinedIcon />
+        </Link>
         <div className="flex items-center gap-3 border-black border rounded-xl p-1">
           <SearchOutlinedIcon />
           <input
@@ -38,7 +39,9 @@ const Navbar = () => {
               src={currentUser?.profile.profilePicUrl ?? PersonIcon}
               alt=""
             />
-            <span>{currentUser?.username}</span>
+            <Link to={'/profile/' + currentUser?.username}>
+              <span>{currentUser?.username}</span>
+            </Link>
           </div>
           <LogoutIcon className="cursor-pointer" onClick={() => logout()} />
         </div>

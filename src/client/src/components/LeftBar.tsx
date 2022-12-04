@@ -3,6 +3,7 @@ import PersonIcon from '@/assets/person.png';
 import { makeRequest } from '../axios';
 import { useQuery } from '@tanstack/react-query';
 import UserSuggestion from '@/components/UserSuggestion';
+import { Link } from 'react-router-dom';
 
 const LeftBar = () => {
   const { currentUser } = useAuth();
@@ -23,7 +24,9 @@ const LeftBar = () => {
               src={currentUser?.profile.profilePicUrl ?? PersonIcon}
               alt=""
             />
-            <span className="font-medium">{currentUser?.username}</span>
+            <Link to={'/profile/' + currentUser?.username}>
+              <span className="font-medium">{currentUser?.username}</span>
+            </Link>
           </div>
           <hr className="my-3 border-none h-[0.5px] bg-gray-300" />
           <h1 className="font-bold text-lg">New Users</h1>

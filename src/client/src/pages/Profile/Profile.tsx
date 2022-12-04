@@ -5,7 +5,7 @@ import { makeRequest } from '../../axios';
 import { useParams } from 'react-router-dom';
 import useAuth, { AuthContext } from '../../context/authContext';
 import PersonIcon from '@/assets/person.png';
-//import Update from '../../components/update/Update';
+import EditProfile from '@/components/EditProfile';
 import { useState } from 'react';
 
 const Profile = () => {
@@ -104,7 +104,7 @@ const Profile = () => {
           </div>
         </>
       )}
-      {openEdit && <EditProfile setOpenEdit={setOpenEdit} user={data} />}
+      {openEdit && <EditProfile setOpenEdit={setOpenEdit} user={data.user} />}
     </div>
   );
 };
