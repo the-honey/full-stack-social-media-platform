@@ -18,6 +18,7 @@ class PostService {
                   profile: { select: { profilePicUrl: true } },
                 },
               },
+              media: true,
             },
             orderBy: { createdAt: 'desc' },
           },
@@ -55,11 +56,12 @@ class PostService {
               username: true,
               profile: { select: { profilePicUrl: true } },
             },
-          } /*,
+          },
+          /*,
           _count: {
             select: { reactions: true },
           },
-          reactions: { include: {author: {select:{_count:{select:{reactions:true}}}}},where: {} },*/,
+          reactions: { include: {author: {select:{_count:{select:{reactions:true}}}}},where: {} },*/
         },
         orderBy: { createdAt: 'desc' },
       });
@@ -80,6 +82,39 @@ class PostService {
         data: { content: content, authorId: userId },
         select: { id: true, content: true, createdAt: true },
       });
+
+      return post;
+    } catch (error) {
+      throw createError.InternalServerError();
+    }
+  }
+
+  public async createPostV2(
+    userId: string,
+    content: string,
+    filename: string | undefined
+  ) {
+    try {
+      let post;
+
+      if (filename) {
+        post = await db.post.create({
+          data: {
+            content: content,
+            authorId: userId,
+            media: { create: { mediaUrl: filename, type: 'IMAGE' } },
+          },
+          select: { id: true, content: true, createdAt: true },
+        });
+      } else {
+        post = await db.post.create({
+          data: {
+            content: content,
+            authorId: userId,
+          },
+          select: { id: true, content: true, createdAt: true },
+        });
+      }
 
       return post;
     } catch (error) {

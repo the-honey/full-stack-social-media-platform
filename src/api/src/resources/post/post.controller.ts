@@ -6,6 +6,9 @@ import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/post/post.validation';
 import verifiedMiddleware from '@/middlewares/verified.middleware';
+import multer from 'multer';
+import { storage } from '@/utils/helpers/diskStorage';
+import { uploadMiddleware } from '@/middlewares/upload.middleware';
 
 class PostController implements Controller {
   public path = '/post';
@@ -25,11 +28,23 @@ class PostController implements Controller {
 
     this.router.get(this.path, authenticatedMiddleware, this.getFeed);
 
+    // this.router.post(
+    //   this.path,
+    //   [
+    //     authenticatedMiddleware,
+    //     verifiedMiddleware(),
+    //     validationMiddleware(validation.createPost),
+    //   ],
+    //   this.createPost
+    // );
+
+    // V2
     this.router.post(
       this.path,
       [
         authenticatedMiddleware,
         verifiedMiddleware(),
+        uploadMiddleware,
         validationMiddleware(validation.createPost),
       ],
       this.createPost
@@ -84,6 +99,25 @@ class PostController implements Controller {
     }
   };
 
+  // private createPost = async (
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ): Promise<Response | void> => {
+  //   try {
+  //     const { user } = res.locals;
+  //     const { content } = req.body;
+
+  //     const post = await this.PostService.createPost(user.id, content);
+
+  //     return res
+  //       .status(HTTPCodes.CREATED)
+  //       .json({ message: 'Successful', post });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
+
   private createPost = async (
     req: Request,
     res: Response,
@@ -92,12 +126,17 @@ class PostController implements Controller {
     try {
       const { user } = res.locals;
       const { content } = req.body;
+      const { file } = req;
 
-      const post = await this.PostService.createPost(user.id, content);
+      const post = await this.PostService.createPostV2(
+        user.id,
+        content,
+        file?.filename
+      );
 
       return res
         .status(HTTPCodes.CREATED)
-        .json({ message: 'Successful', post });
+        .json({ message: 'Successful', file, content });
     } catch (error) {
       next(error);
     }

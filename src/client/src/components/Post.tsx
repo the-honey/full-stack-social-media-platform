@@ -93,11 +93,13 @@ function Post({ post }: any) {
         </div>
         <div className="my-5">
           <p>{post.content}</p>
-          {/*<img
-            className="w-full max-h-full object-cover mt-5"
-            src={'/upload/' + post.img}
-            alt=""
-          />*/}
+          {post?.media.at(0)?.mediaUrl && (
+            <img
+              className="w-full object-cover max-h-[500px] mt-5"
+              src={'/uploads/' + post?.media.at(0)?.mediaUrl}
+              alt=""
+            />
+          )}
         </div>
         <div className="flex items-center gap-5">
           <div className="flex align-center gap-2 cursor-pointer text-sm">

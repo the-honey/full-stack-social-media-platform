@@ -7,24 +7,13 @@ const Share = () => {
   const [file, setFile] = useState(null);
   const [content, setContent] = useState('');
 
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      //formData.append('file', file);
-      const res = await makeRequest.post('/upload', formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const { currentUser } = useAuth();
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    (content: string) => {
-      return makeRequest.post('/post', { content: content });
+    (data: any) => {
+      return makeRequest.post('/post/V2', data);
     },
     {
       onSuccess: () => {
@@ -36,9 +25,11 @@ const Share = () => {
 
   const handleClick = async (e: any) => {
     e.preventDefault();
-    // let imgUrl = '';
-    // if (file) imgUrl = await upload();
-    mutation.mutate(content);
+
+    const formData = new FormData();
+    if (file) formData.append('file', file);
+    formData.append('content', content);
+    mutation.mutate(formData);
     setContent('');
     setFile(null);
   };
@@ -62,7 +53,7 @@ const Share = () => {
               value={content}
             />
           </div>
-          <div className="flex flex-1 justify-end">
+          <div className="flex flex-col justify-end">
             {file && (
               <img
                 className="w-24 h-24 object-cover rounded-2xl"
@@ -80,7 +71,7 @@ const Share = () => {
               type="file"
               id="file"
               style={{ display: 'none' }}
-              //onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e: any) => setFile(e.target.files[0])}
             />
             <label htmlFor="file">
               <div className="flex items-center gap-2 cursor-pointer">
