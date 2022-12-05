@@ -54,7 +54,7 @@ class AuthService {
               birthDate: birthDate,
             },
           },
-          //emailVerification: { create: {} },
+          emailVerification: { create: {} },
         },
       });
 
@@ -67,78 +67,6 @@ class AuthService {
       throw createError.InternalServerError();
     }
   }
-
-  // public async confirmMail(token: string): Promise<any> {
-  //   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-
-  //   const user = await this.user.findOne({
-  //     activationLink: hashedToken,
-  //   });
-
-  //   if (!user) {
-  //     throw new Error('Unable to find user with that email address');
-  //   }
-
-  //   await user.save();
-
-  //   return user;
-  // }
-
-  // public async updatePassword(
-  //   email: string,
-  //   password: string,
-  //   passwordConfirm: string
-  // ): Promise<any> {
-  //   const user = await this.user.findOne({ email });
-
-  //   if (!user) {
-  //     throw new Error('Unable to find user with that email address');
-  //   }
-
-  //   user.password = password;
-  //   user.passwordConfirm = passwordConfirm;
-
-  //   await user.save();
-
-  //   return user;
-  // }
-
-  // public async forgotPassword(email: string): Promise<any> {
-  //   const user = await this.user.findOne({ email });
-
-  //   if (!user) {
-  //     throw new Error('Unable to find user with that email address');
-  //   }
-
-  //   const resetToken = user.createPasswordResetToken();
-
-  //   await user.save();
-
-  //   return resetToken;
-  // }
-
-  // public async resetPassword(
-  //   token: string,
-  //   password: string,
-  //   passwordConfirm: string
-  // ): Promise<any> {
-  //   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-
-  //   const user = await this.user.findOne({
-  //     passwordResetToken: hashedToken,
-  //   });
-
-  //   if (!user) {
-  //     throw new Error('Unable to find user with that email address');
-  //   }
-
-  //   user.password = password;
-  //   user.passwordConfirm = passwordConfirm;
-
-  //   await user.save();
-
-  //   return user;
-  // }
 }
 
 export default AuthService;

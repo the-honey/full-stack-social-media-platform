@@ -3,13 +3,11 @@ import { HTTPCodes } from '@/utils/helpers/response';
 import Controller from '@/utils/interfaces/controller.interface';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validate from '@/resources/auth/auth.validation';
-import UserService from '@/resources/user/user.service';
 import AuthService from '@/resources/auth/auth.service';
 
 class AuthController implements Controller {
   public path = '/auth';
   public router = Router();
-  private UserService = new UserService();
   private AuthService = new AuthService();
 
   constructor() {
@@ -17,8 +15,6 @@ class AuthController implements Controller {
   }
 
   private initialiseRoutes(): void {
-    // this.router.get(`${this.path}`, authenticated, this.getUsers);
-
     this.router.post(
       `${this.path}/login`,
       validationMiddleware(validate.login),
@@ -32,12 +28,6 @@ class AuthController implements Controller {
     );
 
     this.router.post(`${this.path}/logout`, this.logout);
-
-    //this.router.get(`${this.path}/confirmMail/:token`, this.confirmMail);
-    //this.router.patch(`${this.path}/update-password`, this.updatePassword);
-    // this.router.patch(`${this.path}/forgot-password`, this.forgotPassword);
-    // this.router.patch(`${this.path}/reset-password`, this.forgotPassword);
-    // this.router.patch(`${this.path}/-password`, this.forgotPassword);
   }
 
   private login = async (
@@ -106,90 +96,6 @@ class AuthController implements Controller {
       .status(HTTPCodes.OK)
       .json({ message: 'You have been logged out' });
   };
-
-  // private confirmMail = async (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ): Promise<Response | void> => {
-  //   try {
-  //     const { token } = req.params;
-
-  //     const user = await this.AuthService.confirmMail(token);
-
-  //     user.active = true;
-  //     user.activationLink = undefined;
-
-  //     res.status(HTTPCodes.OK).json({ user });
-  //   } catch (error: any) {
-  //     next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
-  //   }
-  // };
-
-  // private updatePassword = async (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ): Promise<Response | void> => {
-  //   try {
-  //     const { password, passwordConfirm } = req.body;
-
-  //     const user = await this.AuthService.updatePassword(
-  //       res.locals.email,
-  //       password,
-  //       passwordConfirm
-  //     );
-
-  //     user.password = undefined;
-  //     user.passwordConfirm = undefined;
-
-  //     res.status(HTTPCodes.OK).json({ user });
-  //   } catch (error: any) {
-  //     next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
-  //   }
-  // };
-
-  // private forgotPassword = async (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ): Promise<Response | void> => {
-  //   try {
-  //     const { email } = req.body;
-
-  //     const user = await this.AuthService.forgotPassword(email);
-
-  //     user.password = undefined;
-  //     user.passwordConfirm = undefined;
-
-  //     res.status(HTTPCodes.OK).json({ user });
-  //   } catch (error: any) {
-  //     next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
-  //   }
-  // };
-
-  // private resetPassword = async (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ): Promise<Response | void> => {
-  //   try {
-  //     const { email, password, passwordConfirm } = req.body;
-
-  //     const user = await this.AuthService.resetPassword(
-  //       email,
-  //       password,
-  //       passwordConfirm
-  //     );
-
-  //     user.password = undefined;
-  //     user.passwordConfirm = undefined;
-
-  //     res.status(HTTPCodes.OK).json({ user });
-  //   } catch (error: any) {
-  //     next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
-  //   }
-  // };
 }
 
 export default AuthController;

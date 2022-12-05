@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import useAuth from '@/context/authContext';
 
 export const ProtectedRoute = ({ children }: any) => {
@@ -7,5 +7,5 @@ export const ProtectedRoute = ({ children }: any) => {
     return <Navigate to="/login" />;
   }
 
-  return children;
+  return <Outlet />;
 };

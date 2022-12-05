@@ -1,4 +1,3 @@
-import { ReactNode, useContext, useState } from 'react';
 import Login from '@/pages/Login/Login';
 import Register from '@/pages/Register/Register';
 import Home from '@/pages/Home/Home';
@@ -6,25 +5,12 @@ import Navbar from '@/components/Navbar';
 import LeftBar from '@/components/LeftBar';
 import RightBar from '@/components/RightBar';
 import Profile from '@/pages/Profile/Profile';
-import { AuthContext, AuthProvider } from '@/context/authContext';
-import useAuth from '@/context/authContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
-//import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { Route, Routes, Outlet } from 'react-router-dom';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 function App() {
-  const { currentUser } = useContext(AuthContext);
-
   const queryClient = new QueryClient();
-
-  const ProtectedRoute = () => {
-    const { currentUser } = useAuth();
-    if (!currentUser) {
-      return <Navigate to="/login" />;
-    }
-
-    return <Outlet />;
-  };
 
   const Layout = () => {
     return (
@@ -54,6 +40,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        {/*<Route path="/verify" element={<EmailVerify />} />*/}
       </Routes>
     </div>
   );

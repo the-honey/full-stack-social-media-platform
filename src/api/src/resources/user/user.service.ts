@@ -88,7 +88,6 @@ class UserService {
   public async getRecommendedUsers(userId: string): Promise<any> {
     try {
       const followingIds = await db.follows.findMany({
-        select: { followingId: true },
         where: { followerId: userId },
       });
 
@@ -100,6 +99,9 @@ class UserService {
               followerId: {
                 in: Array.from(followingIds, (x) => x.followingId),
               },
+            },
+            none: {
+              followerId: userId,
             },
           },
         },
