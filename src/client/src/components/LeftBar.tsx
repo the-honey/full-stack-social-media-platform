@@ -16,7 +16,7 @@ const LeftBar = () => {
 
   return (
     <div className="basis-1/4 hidden lg:block sticky h-full bg-white text-black">
-      <div className="px-5 py-10">
+      <div className="px-5 py-10 gap-3">
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-2">
             <img
