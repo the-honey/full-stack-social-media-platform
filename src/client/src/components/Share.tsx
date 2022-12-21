@@ -2,10 +2,12 @@ import { useContext, useState } from 'react';
 import useAuth from '@/context/authContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ImageIcon from '@mui/icons-material/Image';
+import PersonIcon from '@/assets/person.png';
 import { makeRequest } from '../axios';
 const Share = () => {
   const [file, setFile] = useState(null);
   const [content, setContent] = useState('');
+  const [error, setError] = useState(null);
 
   const { currentUser } = useAuth();
 
@@ -13,12 +15,16 @@ const Share = () => {
 
   const mutation = useMutation(
     (data: any) => {
-      return makeRequest.post('/post/V2', data);
+      return makeRequest.post('/post/', data);
     },
     {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(['posts']);
+        setError(null);
+      },
+      onError: (e: any) => {
+        setError(e.response.data);
       },
     }
   );
@@ -42,7 +48,9 @@ const Share = () => {
             <img
               className="w-10 h-10 rounded-full object-cover"
               src={
-                currentUser?.profile.profilePicUrl ?? './src/assets/person.png'
+                currentUser?.profile.profilePicUrl
+                  ? '/uploads/' + currentUser?.profile.profilePicUrl
+                  : PersonIcon
               }
               alt=""
             />
@@ -64,6 +72,13 @@ const Share = () => {
           </div>
         </div>
         <hr className="my-5" />
+        {error?.message && (
+          <p className="text-red-600 col-span-2">{error.message}</p>
+        )}
+        {error?.errors &&
+          error.errors.map((e: string) => (
+            <p className="text-red-600 col-span-2">{e}</p>
+          ))}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-5">
             <input
@@ -79,16 +94,6 @@ const Share = () => {
                 <span className="text-sm text-green-500">Add Image</span>
               </div>
             </label>
-            {/*
-            <div className="item">
-              <img src={Map} alt="" />
-              <span>Add Place</span>
-            </div>
-            <div className="item">
-              <img src={Friend} alt="" />
-              <span>Tag Friends</span>
-            </div>
-            */}
           </div>
           <div className="">
             <button

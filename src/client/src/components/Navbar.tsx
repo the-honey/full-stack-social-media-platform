@@ -1,10 +1,4 @@
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
-import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import Home from '@mui/icons-material/Home';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@/assets/person.png';
@@ -15,15 +9,16 @@ const Navbar = () => {
   const { currentUser, logout } = useAuth();
 
   return (
-    <div className="shadow-md flex items-center justify-center py-3 px-5 h-13 sticky top-0 bg-white color-black z-50">
-      <div className="flex items-center gap-8">
+    <div className="shadow-md flex py-3 px-5 h-13 sticky top-0 bg-white color-black z-50">
+      <div className="flex items-center gap-3">
         <Link to="/" style={{ textDecoration: 'none' }}>
           <span className="font-bold text-xl text-black">Very Social</span>
         </Link>
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <HomeOutlinedIcon />
+          <Home className="invisible sm:visible" />
         </Link>
-        <div className="flex items-center gap-3 border-black border rounded-xl p-1">
+
+        <div className="hidden items-center gap-3 border-black border rounded-xl p-1">
           <SearchOutlinedIcon />
           <input
             className="placeholder:text-gray-800 border-none lg:w-[500px] sm:w-[200px] bg-transparent text-black hidden sm:block"
@@ -32,11 +27,15 @@ const Navbar = () => {
           />
         </div>
 
-        <div className="items-center gap-5 hidden sm:flex">
-          <div className="hidden md:flex items-center gap-3 font-medium">
+        <div className="items-center gap-5 flex absolute right-0 mr-5">
+          <div className="flex items-center gap-3 font-medium">
             <img
-              className="w-8 h-8"
-              src={currentUser?.profile.profilePicUrl ?? PersonIcon}
+              className="w-8 h-8 rounded-full object-cover"
+              src={
+                currentUser?.profile.profilePicUrl
+                  ? '/uploads/' + currentUser?.profile.profilePicUrl
+                  : PersonIcon
+              }
               alt=""
             />
             <Link to={'/profile/' + currentUser?.username}>

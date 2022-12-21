@@ -3,13 +3,15 @@ import { HTTPCodes } from '@/utils/helpers/response';
 import Controller from '@/utils/interfaces/controller.interface';
 import VerificationService from '@/resources/verification/verification.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
+import { PrismaClient } from '@prisma/client';
 
 class VerificationController implements Controller {
   public path = '/verify';
   public router = Router();
-  private VerificationService = new VerificationService();
+  private VerificationService: VerificationService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.VerificationService = new VerificationService(db);
     this.initialiseRoutes();
   }
 

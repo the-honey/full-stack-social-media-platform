@@ -1,13 +1,19 @@
-import { db } from '@/utils/db';
 import createError from '@/utils/helpers/createError';
 import HttpException from '@/utils/exceptions/http.exception';
 import token from '@/utils/token';
 import bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
 
 class AuthService {
+  private db: PrismaClient;
+
+  constructor(db: PrismaClient) {
+    this.db = db;
+  }
+
   public async login(username: string, password: string): Promise<any> {
     try {
-      const user = await db.user.findFirst({
+      const user = await this.db.user.findFirst({
         include: { profile: true },
         where: { username: username },
       });
@@ -32,7 +38,7 @@ class AuthService {
     password: string
   ): Promise<any> {
     try {
-      const count = await db.user.count({
+      const count = await this.db.user.count({
         where: {
           OR: [{ username: username }, { email: email }],
         },
@@ -42,7 +48,7 @@ class AuthService {
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      const user = await db.user.create({
+      const user = await this.db.user.create({
         data: {
           username: username,
           email: email,
@@ -59,7 +65,6 @@ class AuthService {
       });
 
       const accessToken = token.createToken(user);
-      //return { user, token: accessToken, activationToken };
       return { user, accessToken };
     } catch (error) {
       if (error instanceof HttpException) throw error;

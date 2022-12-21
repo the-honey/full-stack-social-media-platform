@@ -1,16 +1,21 @@
-import { db } from '@/utils/db';
 import HttpException from '@/utils/exceptions/http.exception';
 import createError from '@/utils/helpers/createError';
-import { ReactionType } from '@prisma/client';
+import { PrismaClient, ReactionType } from '@prisma/client';
 
 class ReactionService {
+  private db: PrismaClient;
+
+  constructor(db: PrismaClient) {
+    this.db = db;
+  }
+
   public async addReaction(
     userId: string,
     postId: string,
     reactionType: ReactionType
   ) {
     try {
-      const reaction = await db.reaction.upsert({
+      const reaction = await this.db.reaction.upsert({
         create: { authorId: userId, postId: postId, type: reactionType },
         update: { type: reactionType },
         where: { authorId_postId: { authorId: userId, postId: postId } },
@@ -24,7 +29,7 @@ class ReactionService {
 
   public async removeReaction(userId: string, postId: string) {
     try {
-      const reaction = await db.reaction.deleteMany({
+      const reaction = await this.db.reaction.deleteMany({
         where: { authorId: userId, postId: postId },
       });
 
@@ -40,12 +45,12 @@ class ReactionService {
 
   public async getReactions(userId: string, postId: string) {
     try {
-      const post = await db.post.findFirst({
+      const post = await this.db.post.findFirst({
         include: { _count: { select: { reactions: true } } },
         where: { id: postId },
       });
 
-      const reaction = await db.reaction.findFirst({
+      const reaction = await this.db.reaction.findFirst({
         where: { authorId: userId, postId: postId },
       });
 

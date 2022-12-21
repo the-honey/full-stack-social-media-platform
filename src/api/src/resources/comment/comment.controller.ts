@@ -6,13 +6,15 @@ import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/comment/comment.validation';
 import verifiedMiddleware from '@/middlewares/verified.middleware';
+import { PrismaClient } from '@prisma/client';
 
 class CommentController implements Controller {
   public path = '/comment';
   public router = Router();
-  private CommentService = new CommentService();
+  private CommentService: CommentService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.CommentService = new CommentService(db);
     this.initialiseRoutes();
   }
 

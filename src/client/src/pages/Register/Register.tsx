@@ -20,7 +20,7 @@ const Register = () => {
     <div className="h-screen bg-green-300 flex items-center justify-center">
       <div className="w-1/2 flex flex-row-reverse bg-white rounded-lg min-h-[600px] overflow-hidden shadow-xl">
         <div className="flex-1 bg-gradient-to-bl from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
-          <h1 className="text-7xl font-bold">Very Social Platform.</h1>
+          <h1 className="text-7xl font-bold">Welcome</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
             alias totam numquam ipsa exercitationem dignissimos, error nam,
@@ -35,65 +35,73 @@ const Register = () => {
         </div>
         <div className="flex-1 p-12 flex flex-col gap-12 justify-center">
           <h1 className="text-4xl text-gray-600 font-bold">Register</h1>
-          <form className="grid grid-cols-2 gap-6">
-            <input
-              className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="email"
-              placeholder="Email"
-              name="email"
-              required
-              onChange={handleChange}
-            />
-            <input
-              className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="text"
-              placeholder="Username"
-              name="username"
-              required
-              onChange={handleChange}
-            />
-            <input
-              className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="date"
-              name="birthDate"
-              required
-              onChange={handleChange}
-            />
-            <input
-              className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="text"
-              placeholder="First Name"
-              name="firstName"
-              required
-              onChange={handleChange}
-            />
-            <input
-              className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="text"
-              placeholder="Last Name"
-              name="lastName"
-              required
-              onChange={handleChange}
-            />
-            <input
-              className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="password"
-              placeholder="Password"
-              name="password"
-              required
-              onChange={handleChange}
-            />
-            <input
-              className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
-              type="password"
-              placeholder="Confirm Password"
-              name="passwordConfirm"
-              required
-              onChange={handleChange}
-            />
-            {error?.message && <p className="text-red-600">{error.message}</p>}
+          <form>
+            <div className="mb-6 grid grid-cols-2 gap-6">
+              <input
+                className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="email"
+                placeholder="Email"
+                name="email"
+                required
+                onChange={handleChange}
+              />
+              <input
+                className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="text"
+                placeholder="Username"
+                name="username"
+                required
+                onChange={handleChange}
+              />
+              <input
+                className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="date"
+                name="birthDate"
+                required
+                onChange={handleChange}
+              />
+              <input
+                className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="text"
+                placeholder="First Name"
+                name="firstName"
+                required
+                onChange={handleChange}
+              />
+              <input
+                className="border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="text"
+                placeholder="Last Name"
+                name="lastName"
+                required
+                onChange={handleChange}
+              />
+              <input
+                className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="password"
+                placeholder="Password"
+                name="password"
+                required
+                onChange={handleChange}
+              />
+              <input
+                className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
+                type="password"
+                placeholder="Confirm Password"
+                name="passwordConfirm"
+                required
+                onChange={handleChange}
+              />
+            </div>
+            {error?.message && (
+              <p className="text-red-600 col-span-2">{error.message}</p>
+            )}
+            {error?.errors &&
+              error.errors.map((e: string) => (
+                <p className="text-red-600 col-span-2">{e}</p>
+              ))}
             <button
-              className="w-1/2 p-3 border-none bg-slate-500 text-white cursor-pointer font-bold rounded-lg"
+              className="mt-6 w-1/2 p-3 border-none bg-slate-500 text-white cursor-pointer font-bold rounded-lg"
               onClick={handleClick}
             >
               Register

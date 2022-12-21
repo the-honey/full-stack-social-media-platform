@@ -5,13 +5,16 @@ import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/user/user.validation';
 import { HTTPCodes } from '@/utils/helpers/response';
+import { PrismaClient } from '@prisma/client';
+import { uploadMiddleware } from '@/middlewares/upload.middleware';
 
 class UserController implements Controller {
   public path = '/user';
   public router = Router();
-  private UserService = new UserService();
+  private UserService: UserService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.UserService = new UserService(db);
     this.initialiseRoutes();
   }
 
@@ -24,7 +27,11 @@ class UserController implements Controller {
 
     this.router.patch(
       this.path,
-      [authenticatedMiddleware, validationMiddleware(validation.editUser)],
+      [
+        authenticatedMiddleware,
+        uploadMiddleware,
+        validationMiddleware(validation.editUser),
+      ],
       this.editUser
     );
 
@@ -79,13 +86,15 @@ class UserController implements Controller {
     try {
       const { profileId } = res.locals.user;
       const { firstName, lastName, description, birthDate } = req.body;
+      const { file } = req;
 
       const user = await this.UserService.editUser(
         profileId,
         firstName,
         lastName,
         birthDate,
-        description
+        description,
+        file?.filename
       );
 
       return res.status(HTTPCodes.OK).json({ message: 'Successful', user });

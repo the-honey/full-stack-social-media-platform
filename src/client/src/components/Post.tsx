@@ -65,7 +65,11 @@ function Post({ post }: any) {
           <div className="flex gap-2">
             <img
               className="w-10 h-10 rounded-full object-cover"
-              src={post.author.profile.profilePicUrl ?? PersonIcon}
+              src={
+                post.author.profile.profilePicUrl
+                  ? '/uploads/' + post.author.profile.profilePicUrl
+                  : PersonIcon
+              }
               alt=""
             />
             <div className="flex flex-col">

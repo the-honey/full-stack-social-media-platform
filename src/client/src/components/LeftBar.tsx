@@ -21,7 +21,11 @@ const LeftBar = () => {
           <div className="flex items-center gap-2">
             <img
               className="w-8 h-8 rounded-full object-cover"
-              src={currentUser?.profile.profilePicUrl ?? PersonIcon}
+              src={
+                currentUser?.profile.profilePicUrl
+                  ? '/uploads/' + currentUser?.profile.profilePicUrl
+                  : PersonIcon
+              }
               alt=""
             />
             <Link to={'/profile/' + currentUser?.username}>
@@ -35,7 +39,11 @@ const LeftBar = () => {
             : isLoading
             ? 'loading'
             : data.users.map((user: any) => (
-                <UserSuggestion key={user.username} username={user.username} />
+                <UserSuggestion
+                  key={user.username}
+                  username={user.username}
+                  profilePicUrl={user.profile.profilePicUrl}
+                />
               ))}
         </div>
       </div>

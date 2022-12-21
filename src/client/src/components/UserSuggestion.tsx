@@ -4,7 +4,7 @@ import useAuth from '@/context/authContext';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { makeRequest } from '../axios';
 
-const UserSuggestion = ({ username }: any) => {
+const UserSuggestion = ({ username, profilePicUrl }: any) => {
   const { currentUser } = useAuth();
   const { isLoading, data } = useQuery(['relationship_' + username], () =>
     makeRequest.get('/follow/' + username).then((res) => {
@@ -35,7 +35,7 @@ const UserSuggestion = ({ username }: any) => {
     <div className="flex items-center gap-3">
       <img
         className="w-8 h-8 rounded-full object-cover"
-        src={PersonIcon}
+        src={profilePicUrl ? '/uploads/' + profilePicUrl : PersonIcon}
         alt=""
       />
       <Link

@@ -4,7 +4,6 @@ import Token from '@/utils/interfaces/token.interface';
 import createError from '@/utils/helpers/createError';
 import jwt from 'jsonwebtoken';
 import { db } from '@/utils/db';
-import HttpException from '@/utils/exceptions/http.exception';
 
 async function authenticatedMiddleware(
   req: Request,

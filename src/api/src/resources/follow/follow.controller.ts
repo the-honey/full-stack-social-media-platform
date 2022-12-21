@@ -4,13 +4,15 @@ import Controller from '@/utils/interfaces/controller.interface';
 import FollowService from '@/resources/follow/follow.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import verifiedMiddleware from '@/middlewares/verified.middleware';
+import { PrismaClient } from '@prisma/client';
 
 class FollowController implements Controller {
   public path = '/follow';
   public router = Router();
-  private FollowService = new FollowService();
+  private FollowService: FollowService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.FollowService = new FollowService(db);
     this.initialiseRoutes();
   }
 

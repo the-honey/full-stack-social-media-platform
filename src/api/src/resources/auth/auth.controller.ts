@@ -4,13 +4,15 @@ import Controller from '@/utils/interfaces/controller.interface';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validate from '@/resources/auth/auth.validation';
 import AuthService from '@/resources/auth/auth.service';
+import { PrismaClient } from '@prisma/client';
 
 class AuthController implements Controller {
   public path = '/auth';
   public router = Router();
-  private AuthService = new AuthService();
+  private AuthService: AuthService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.AuthService = new AuthService(db);
     this.initialiseRoutes();
   }
 

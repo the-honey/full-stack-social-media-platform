@@ -6,13 +6,15 @@ import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/reaction/reaction.validation';
 import verifiedMiddleware from '@/middlewares/verified.middleware';
+import { PrismaClient } from '@prisma/client';
 
 class ReactionController implements Controller {
   public path = '/reaction/:postId';
   public router = Router();
-  private ReactionService = new ReactionService();
+  private ReactionService: ReactionService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.ReactionService = new ReactionService(db);
     this.initialiseRoutes();
   }
 

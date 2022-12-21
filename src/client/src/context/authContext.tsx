@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useLocalStorage } from '@/hooks/userLocalStorage';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { makeRequest } from '../axios';
 
 export type LoginData = {
   username: string;
@@ -40,6 +41,7 @@ type AuthContextType = {
   login: (inputs: LoginData) => void;
   register: (inputs: RegisterData) => void;
   logout: () => void;
+  refreshProfile: () => void;
 };
 
 export default function useAuth() {
@@ -70,13 +72,25 @@ export const AuthProvider = ({
     if (error) setError(null);
   }, [location.pathname]);
 
+  async function refreshProfile() {
+    makeRequest
+      .get('/user/id/' + currentUser?.username)
+      .then((res) => {
+        const { user } = res.data;
+        setCurrentUser(
+          (prev) => ({ ...prev, profile: user.profile } as UserData)
+        );
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) setError(err.response?.data);
+      });
+  }
+
   async function login(inputs: LoginData) {
     setLoading(true);
 
-    axios
-      .post('http://localhost:3000/api/auth/login', inputs, {
-        withCredentials: true,
-      })
+    makeRequest
+      .post('/auth/login', inputs)
       .then((res) => {
         const { user } = res.data;
         setCurrentUser(user);
@@ -91,10 +105,8 @@ export const AuthProvider = ({
   async function register(inputs: RegisterData) {
     setLoading(true);
 
-    axios
-      .post('http://localhost:3000/api/auth/register', inputs, {
-        withCredentials: true,
-      })
+    makeRequest
+      .post('/auth/register', inputs)
       .then((res) => {
         const { user } = res.data;
         setCurrentUser(user);
@@ -111,10 +123,8 @@ export const AuthProvider = ({
   async function logout() {
     setLoading(true);
 
-    axios
-      .post('http://localhost:3000/api/auth/logout', {
-        withCredentials: true,
-      })
+    makeRequest
+      .post('/auth/logout')
       .then((res) => {
         setCurrentUser(null);
         navigate('/login');
@@ -135,6 +145,7 @@ export const AuthProvider = ({
       login,
       register,
       logout,
+      refreshProfile,
     }),
     [currentUser, loading, error]
   );

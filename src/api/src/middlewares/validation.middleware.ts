@@ -17,7 +17,7 @@ function validationMiddleware(schema: Joi.Schema): RequestHandler {
     try {
       const value = await schema.validateAsync(req.body, validationOptions);
       req.body = value;
-      next();
+      return next();
     } catch (e: any) {
       const errors: string[] = [];
       e.details.forEach((error: Joi.ValidationErrorItem) => {

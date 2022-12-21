@@ -12,7 +12,7 @@ function verifiedMiddleware(): RequestHandler {
     if (!user.isEmailVerified)
       return next(createError.Unauthorised('You must verify your email'));
 
-    next();
+    return next();
   };
 }
 

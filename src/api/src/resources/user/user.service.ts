@@ -1,22 +1,22 @@
-import { db } from '@/utils/db';
 import HttpException from '@/utils/exceptions/http.exception';
 import createError from '@/utils/helpers/createError';
+import { PrismaClient } from '@prisma/client';
+import dayjs from 'dayjs';
 
 class UserService {
+  private db: PrismaClient;
+
+  constructor(db: PrismaClient) {
+    this.db = db;
+  }
+
   public async getNewestUsers(userId: string): Promise<any> {
     try {
-      const users = await db.user.findMany({
+      const users = await this.db.user.findMany({
         select: {
           id: true,
           username: true,
-          profile: {
-            select: {
-              firstName: true,
-              lastName: true,
-              description: true,
-              profilePicUrl: true,
-            },
-          },
+          profile: true,
         },
         where: { NOT: { id: userId } },
         orderBy: { createdAt: 'desc' },
@@ -32,7 +32,7 @@ class UserService {
 
   public async getUser(username: string): Promise<any> {
     try {
-      const user = await db.user.findFirst({
+      const user = await this.db.user.findFirst({
         select: {
           id: true,
           username: true,
@@ -60,18 +60,20 @@ class UserService {
 
   public async editUser(
     profileId: number,
-    firstName: string,
-    lastName: string,
-    birthDate: Date,
-    description: string
+    firstName: string | undefined,
+    lastName: string | undefined,
+    birthDate: Date | undefined,
+    description: string | undefined,
+    profilePic: string | undefined
   ): Promise<any> {
     try {
-      const profile = await db.profile.update({
+      const profile = await this.db.profile.update({
         data: {
           firstName: firstName,
           lastName: lastName,
           birthDate: birthDate,
-          description,
+          description: description,
+          profilePicUrl: profilePic,
         },
         where: { id: profileId },
       });
@@ -87,12 +89,16 @@ class UserService {
 
   public async getRecommendedUsers(userId: string): Promise<any> {
     try {
-      const followingIds = await db.follows.findMany({
+      const followingIds = await this.db.follows.findMany({
         where: { followerId: userId },
       });
 
-      const recommended = await db.user.findMany({
-        select: { username: true, _count: { select: { followedBy: true } } },
+      const recommended = await this.db.user.findMany({
+        select: {
+          username: true,
+          profile: true,
+          _count: { select: { followedBy: true } },
+        },
         where: {
           followedBy: {
             some: {
@@ -117,7 +123,7 @@ class UserService {
 
   public async deleteUser(userId: string): Promise<any> {
     try {
-      const user = await db.user.delete({
+      const user = await this.db.user.delete({
         where: {
           id: userId,
         },

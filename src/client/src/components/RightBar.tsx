@@ -23,7 +23,11 @@ const RightBar = () => {
           : isLoading
           ? 'loading'
           : data.users.map((user: any) => (
-              <UserSuggestion key={user.username} username={user.username} />
+              <UserSuggestion
+                key={user.username}
+                username={user.username}
+                profilePicUrl={user.profile.profilePicUrl}
+              />
             ))}
       </div>
     </div>

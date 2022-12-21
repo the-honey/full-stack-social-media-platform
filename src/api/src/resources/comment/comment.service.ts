@@ -1,11 +1,17 @@
-import { db } from '@/utils/db';
 import HttpException from '@/utils/exceptions/http.exception';
 import createError from '@/utils/helpers/createError';
+import { PrismaClient } from '@prisma/client';
 
 class CommentService {
+  private db: PrismaClient;
+
+  constructor(db: PrismaClient) {
+    this.db = db;
+  }
+
   public async getComments(postId: string) {
     try {
-      const comments = await db.comment.findMany({
+      const comments = await this.db.comment.findMany({
         include: {
           author: {
             select: {
@@ -26,7 +32,7 @@ class CommentService {
 
   public async addComment(userId: string, postId: string, content: string) {
     try {
-      const comment = await db.comment.create({
+      const comment = await this.db.comment.create({
         data: { authorId: userId, postId: postId, content: content },
       });
 
@@ -38,7 +44,7 @@ class CommentService {
 
   public async editComment(userId: string, commentId: string, content: string) {
     try {
-      const author = await db.comment.findFirst({
+      const author = await this.db.comment.findFirst({
         select: { authorId: true },
         where: { id: commentId },
       });
@@ -46,7 +52,7 @@ class CommentService {
       if (!author) throw createError.NotFound();
       else if (author.authorId != userId) throw createError.Forbidden();
 
-      const comment = await db.comment.update({
+      const comment = await this.db.comment.update({
         data: { content: content },
         where: { id: commentId },
       });
@@ -63,7 +69,7 @@ class CommentService {
 
   public async deleteComment(userId: string, commentId: string) {
     try {
-      const author = await db.comment.findFirst({
+      const author = await this.db.comment.findFirst({
         select: { authorId: true },
         where: { id: commentId },
       });
@@ -71,7 +77,7 @@ class CommentService {
       if (!author) throw createError.NotFound();
       else if (author.authorId != userId) throw createError.Forbidden();
 
-      const comment = await db.comment.delete({
+      const comment = await this.db.comment.delete({
         where: { id: commentId },
       });
 

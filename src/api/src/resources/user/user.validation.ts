@@ -7,7 +7,7 @@ const getUser = Joi.object({
 const editUser = Joi.object({
   firstName: Joi.string().regex(/\D+/).min(2).max(30).optional(),
   lastName: Joi.string().regex(/\D+/).min(2).max(30).optional(),
-  description: Joi.string().max(300).optional(),
+  description: Joi.string().min(0).max(300).optional(),
   birthDate: Joi.date().optional(),
 });
 

@@ -40,7 +40,11 @@ const Comments = ({ postId }: any) => {
       <div className="flex items-center justify-between gap-5 my-5">
         <img
           className="w-10 h-10 rounded-full object-cover"
-          src={currentUser?.profile.profilePicUrl ?? PersonIcon}
+          src={
+            currentUser?.profile.profilePicUrl
+              ? '/uploads/' + currentUser?.profile.profilePicUrl
+              : PersonIcon
+          }
           alt=""
         />
         <input

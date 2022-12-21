@@ -1,12 +1,18 @@
-import { db } from '@/utils/db';
 import HttpException from '@/utils/exceptions/http.exception';
 import createError from '@/utils/helpers/createError';
+import { PrismaClient } from '@prisma/client';
 import dayjs from 'dayjs';
 
 class VerificationService {
+  private db: PrismaClient;
+
+  constructor(db: PrismaClient) {
+    this.db = db;
+  }
+
   public async verify(token: string) {
     try {
-      const verification = await db.emailVerification.findFirst({
+      const verification = await this.db.emailVerification.findFirst({
         where: { token: token },
       });
 
@@ -16,12 +22,12 @@ class VerificationService {
       )
         throw createError.BadRequest('Invalid verification token');
 
-      const user = await db.user.update({
+      const user = await this.db.user.update({
         data: { isEmailVerified: true },
         where: { id: verification.userId },
       });
 
-      const deleteVerification = await db.emailVerification.delete({
+      const deleteVerification = await this.db.emailVerification.delete({
         where: { token: token },
       });
 
@@ -35,12 +41,12 @@ class VerificationService {
 
   public async createEmailVerification(userId: string) {
     try {
-      const isVerified = await db.user.findFirst({
+      const isVerified = await this.db.user.findFirst({
         where: { id: userId, isEmailVerified: true },
       });
       if (isVerified) throw createError.Conflict('Already verified');
 
-      const verification = await db.emailVerification.create({
+      const verification = await this.db.emailVerification.create({
         data: { userId: userId },
       });
 

@@ -6,16 +6,16 @@ import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/post/post.validation';
 import verifiedMiddleware from '@/middlewares/verified.middleware';
-import multer from 'multer';
-import { storage } from '@/utils/helpers/diskStorage';
 import { uploadMiddleware } from '@/middlewares/upload.middleware';
+import { PrismaClient } from '@prisma/client';
 
 class PostController implements Controller {
   public path = '/post';
   public router = Router();
-  private PostService = new PostService();
+  private PostService: PostService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.PostService = new PostService(db);
     this.initialiseRoutes();
   }
 
@@ -28,17 +28,6 @@ class PostController implements Controller {
 
     this.router.get(this.path, authenticatedMiddleware, this.getFeed);
 
-    // this.router.post(
-    //   this.path,
-    //   [
-    //     authenticatedMiddleware,
-    //     verifiedMiddleware(),
-    //     validationMiddleware(validation.createPost),
-    //   ],
-    //   this.createPost
-    // );
-
-    // V2
     this.router.post(
       this.path,
       [
@@ -98,25 +87,6 @@ class PostController implements Controller {
       return next(error);
     }
   };
-
-  // private createPost = async (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ): Promise<Response | void> => {
-  //   try {
-  //     const { user } = res.locals;
-  //     const { content } = req.body;
-
-  //     const post = await this.PostService.createPost(user.id, content);
-
-  //     return res
-  //       .status(HTTPCodes.CREATED)
-  //       .json({ message: 'Successful', post });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
 
   private createPost = async (
     req: Request,
