@@ -90,7 +90,7 @@ export const AuthProvider = ({
     setLoading(true);
 
     makeRequest
-      .post('/auth/login', inputs)
+      .post('/api/auth/login', inputs)
       .then((res) => {
         const { user } = res.data;
         setCurrentUser(user);
@@ -106,7 +106,7 @@ export const AuthProvider = ({
     setLoading(true);
 
     makeRequest
-      .post('/auth/register', inputs)
+      .post('/api/auth/register', inputs)
       .then((res) => {
         const { user } = res.data;
         setCurrentUser(user);
@@ -124,7 +124,7 @@ export const AuthProvider = ({
     setLoading(true);
 
     makeRequest
-      .post('/auth/logout')
+      .post('/api/auth/logout')
       .then((res) => {
         setCurrentUser(null);
         navigate('/login');

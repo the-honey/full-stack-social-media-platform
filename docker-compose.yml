@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   postgres:
     hostname: postgres
@@ -36,15 +36,3 @@ services:
       - 5000:5000
     depends_on:
       - api
-
-  nginx:
-    image: nginx:latest
-    restart: always
-    volumes:
-      - ./src/nginx/default.conf:/etc/nginx/default.conf
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - api
-      - client

@@ -7,7 +7,7 @@ import { makeRequest } from '../axios';
 const UserSuggestion = ({ username, profilePicUrl }: any) => {
   const { currentUser } = useAuth();
   const { isLoading, data } = useQuery(['relationship_' + username], () =>
-    makeRequest.get('/follow/' + username).then((res) => {
+    makeRequest.get('/api/follow/' + username).then((res) => {
       return res.data;
     })
   );
@@ -16,8 +16,8 @@ const UserSuggestion = ({ username, profilePicUrl }: any) => {
 
   const mutation = useMutation(
     (following: boolean) => {
-      if (following) return makeRequest.delete('/follow/' + username);
-      return makeRequest.post('/follow/' + username);
+      if (following) return makeRequest.delete('/api/follow/' + username);
+      return makeRequest.post('/api/follow/' + username);
     },
     {
       onSuccess: () => {

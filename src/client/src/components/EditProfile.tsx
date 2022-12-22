@@ -25,7 +25,7 @@ const EditProfile = ({ setOpenEdit, user }: any) => {
 
   const mutation = useMutation(
     (data: any) => {
-      return makeRequest.patch('/user/', data);
+      return makeRequest.patch('/api/user/', data);
     },
     {
       onSuccess: () => {

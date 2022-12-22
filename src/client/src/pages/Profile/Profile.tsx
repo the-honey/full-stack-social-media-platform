@@ -14,7 +14,7 @@ const Profile = () => {
   let { username } = useParams();
 
   const { isLoading, error, data } = useQuery(['user_' + username], () =>
-    makeRequest.get('/user/id/' + username ?? '').then((res) => {
+    makeRequest.get('/api/user/id/' + username ?? '').then((res) => {
       return res.data;
     })
   );
@@ -22,7 +22,7 @@ const Profile = () => {
   const { isLoading: rIsLoading, data: relationshipData } = useQuery(
     ['relationship_' + username],
     () =>
-      makeRequest.get('/follow/' + username).then((res) => {
+      makeRequest.get('/api/follow/' + username).then((res) => {
         return res.data;
       })
   );
@@ -31,8 +31,8 @@ const Profile = () => {
 
   const mutation = useMutation(
     (following: boolean) => {
-      if (following) return makeRequest.delete('/follow/' + username);
-      return makeRequest.post('/follow/' + username);
+      if (following) return makeRequest.delete('/api/follow/' + username);
+      return makeRequest.post('/api/follow/' + username);
     },
     {
       onSuccess: () => {

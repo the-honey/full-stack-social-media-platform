@@ -8,7 +8,7 @@ const RightBar = () => {
   const { currentUser } = useAuth();
 
   const { isLoading, error, data } = useQuery(['suggestedusers'], () =>
-    makeRequest.get('/user/recommended').then((res) => {
+    makeRequest.get('/api/user/recommended').then((res) => {
       return res.data;
     })
   );

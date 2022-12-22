@@ -15,7 +15,7 @@ const Share = () => {
 
   const mutation = useMutation(
     (data: any) => {
-      return makeRequest.post('/post/', data);
+      return makeRequest.post('/api/post/', data);
     },
     {
       onSuccess: () => {

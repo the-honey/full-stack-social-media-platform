@@ -10,7 +10,7 @@ const Comments = ({ postId }: any) => {
   const { currentUser } = useAuth();
 
   const { isLoading, error, data } = useQuery(['post_' + postId], () =>
-    makeRequest.get('/comment/' + postId).then((res) => {
+    makeRequest.get('/api/comment/' + postId).then((res) => {
       return res.data.comments;
     })
   );
@@ -19,7 +19,7 @@ const Comments = ({ postId }: any) => {
 
   const mutation = useMutation(
     (content: string) => {
-      return makeRequest.post('/comment/' + postId, { content: content });
+      return makeRequest.post('/api/comment/' + postId, { content: content });
     },
     {
       onSuccess: () => {

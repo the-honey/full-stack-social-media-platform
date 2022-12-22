@@ -4,7 +4,7 @@ import { makeRequest } from '../axios';
 
 const Posts = ({ username }: any) => {
   const { isLoading, error, data } = useQuery(['posts'], () =>
-    makeRequest.get('/post/' + (username ?? '')).then((res) => {
+    makeRequest.get('/api/post/' + (username ?? '')).then((res) => {
       return res.data;
     })
   );

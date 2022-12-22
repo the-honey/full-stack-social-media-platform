@@ -9,7 +9,7 @@ const LeftBar = () => {
   const { currentUser } = useAuth();
 
   const { isLoading, error, data } = useQuery(['newestusers'], () =>
-    makeRequest.get('/user/newest').then((res) => {
+    makeRequest.get('/api/user/newest').then((res) => {
       return res.data;
     })
   );

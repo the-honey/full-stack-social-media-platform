@@ -19,7 +19,7 @@ function Post({ post }: any) {
   const { currentUser } = useAuth();
 
   const { isLoading, error, data } = useQuery(['reactions', post.id], () =>
-    makeRequest.get('/reaction/' + post.id).then((res) => {
+    makeRequest.get('/api/reaction/' + post.id).then((res) => {
       return res.data;
     })
   );
@@ -28,8 +28,10 @@ function Post({ post }: any) {
 
   const mutation = useMutation(
     (liked: boolean) => {
-      if (liked) return makeRequest.delete('/reaction/' + post.id);
-      return makeRequest.post('/reaction/' + post.id, { reactionType: 'LIKE' });
+      if (liked) return makeRequest.delete('/api/reaction/' + post.id);
+      return makeRequest.post('/api/reaction/' + post.id, {
+        reactionType: 'LIKE',
+      });
     },
     {
       onSuccess: () => {
@@ -40,7 +42,7 @@ function Post({ post }: any) {
   );
   const deleteMutation = useMutation(
     (postId) => {
-      return makeRequest.delete('/post/' + postId);
+      return makeRequest.delete('/api/post/' + postId);
     },
     {
       onSuccess: () => {
