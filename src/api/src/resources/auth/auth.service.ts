@@ -53,6 +53,7 @@ class AuthService {
           username: username,
           email: email,
           password: hashedPassword,
+          isEmailVerified: true,
           profile: {
             create: {
               firstName: firstName,
@@ -60,7 +61,7 @@ class AuthService {
               birthDate: birthDate,
             },
           },
-          emailVerification: { create: {} },
+          //emailVerification: { create: {} },
         },
       });
 
