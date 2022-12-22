@@ -17,9 +17,9 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen bg-green-300 flex items-center justify-center">
-      <div className="w-1/2 flex flex-row-reverse bg-white rounded-lg min-h-[600px] overflow-hidden shadow-xl">
-        <div className="flex-1 bg-gradient-to-bl from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
+    <div className="h-full sm:h-screen bg-green-300 flex md:items-center justify-center">
+      <div className="md:rounded-xl max-w-[950px] flex flex-wrap flex-row-reverse bg-white min-h-[600px] shadow-xl">
+        <div className="flex-1 md:rounded-r-xl bg-gradient-to-br from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
           <h1 className="text-7xl font-bold">Welcome</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
@@ -36,7 +36,7 @@ const Register = () => {
         <div className="flex-1 p-12 flex flex-col gap-12 justify-center">
           <h1 className="text-4xl text-gray-600 font-bold">Register</h1>
           <form>
-            <div className="mb-6 grid grid-cols-2 gap-6">
+            <div className="mb-6 grid grid-cols-2 gap-3">
               <input
                 className="col-span-2 border-solid border-b-2 border-b-gray-300 px-5 py-3"
                 type="email"

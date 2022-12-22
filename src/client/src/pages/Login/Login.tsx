@@ -19,9 +19,9 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen bg-green-300 flex items-center justify-center">
-      <div className="w-1/2 flex bg-white rounded-xl min-h-[600px] overflow-hidden shadow-xl">
-        <div className="flex-1 bg-gradient-to-br from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
+    <div className="h-full sm:h-screen bg-green-300 flex md:items-center justify-center">
+      <div className="md:rounded-xl max-w-[950px] flex flex-wrap bg-white min-h-[600px] shadow-xl">
+        <div className="flex-1 md:rounded-l-xl bg-gradient-to-br from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
           <h1 className="text-8xl font-bold">Very Social</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
