@@ -100,6 +100,9 @@ class UserService {
           _count: { select: { followedBy: true } },
         },
         where: {
+          NOT: {
+            id: userId,
+          },
           followedBy: {
             some: {
               followerId: {
