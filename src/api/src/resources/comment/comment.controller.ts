@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import CommentService from '@/resources/comment/comment.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
@@ -59,7 +59,7 @@ class CommentController implements Controller {
       const comments = await this.CommentService.getComments(postId);
 
       return res
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Successful', comments });
     } catch (error) {
       return next(error);
@@ -85,7 +85,7 @@ class CommentController implements Controller {
       );
 
       return res
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Successful', comment });
     } catch (error) {
       return next(error);
@@ -108,7 +108,9 @@ class CommentController implements Controller {
         content
       );
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', comment });
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Successful', comment });
     } catch (error) {
       return next(error);
     }
@@ -125,7 +127,7 @@ class CommentController implements Controller {
 
       await this.CommentService.deleteComment(user.id, commentId);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+      return res.status(StatusCodes.OK).json({ message: 'Successful' });
     } catch (error) {
       return next(error);
     }

@@ -4,7 +4,7 @@ import UserService from '@/resources/user/user.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/user/user.validation';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import { PrismaClient } from '@prisma/client';
 import { uploadMiddleware } from '@/middlewares/upload.middleware';
 
@@ -57,7 +57,7 @@ class UserController implements Controller {
       const { user } = res.locals;
 
       const users = await this.UserService.getNewestUsers(user.id);
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', users });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', users });
     } catch (error) {
       return next(error);
     }
@@ -72,7 +72,7 @@ class UserController implements Controller {
       const { username } = req.params;
 
       const user = await this.UserService.getUser(username);
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', user });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', user });
     } catch (error) {
       return next(error);
     }
@@ -97,7 +97,7 @@ class UserController implements Controller {
         file?.filename
       );
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', user });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', user });
     } catch (error) {
       return next(error);
     }
@@ -113,7 +113,7 @@ class UserController implements Controller {
 
       const users = await this.UserService.getRecommendedUsers(user.id);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', users });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', users });
     } catch (error) {
       return next(error);
     }

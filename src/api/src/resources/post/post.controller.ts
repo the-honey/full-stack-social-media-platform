@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import PostService from '@/resources/post/post.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
@@ -66,7 +66,7 @@ class PostController implements Controller {
 
       const posts = await this.PostService.getFeed(user.id);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', posts });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', posts });
     } catch (error) {
       return next(error);
     }
@@ -82,7 +82,7 @@ class PostController implements Controller {
 
       const posts = await this.PostService.getPosts(username);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', posts });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', posts });
     } catch (error) {
       return next(error);
     }
@@ -105,7 +105,7 @@ class PostController implements Controller {
       );
 
       return res
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Successful', file, content });
     } catch (error) {
       next(error);
@@ -123,7 +123,7 @@ class PostController implements Controller {
 
       const post = await this.PostService.deletePost(user.id, postId);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', post });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', post });
     } catch (error) {
       return next(error);
     }
@@ -141,7 +141,7 @@ class PostController implements Controller {
 
       const post = await this.PostService.editPost(user.id, postId, content);
       return res
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Successful', post });
     } catch (error) {
       return next(error);

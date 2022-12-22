@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import VerificationService from '@/resources/verification/verification.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
@@ -35,7 +35,7 @@ class VerificationController implements Controller {
 
       const verify = await this.VerificationService.verify(token);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+      return res.status(StatusCodes.OK).json({ message: 'Successful' });
     } catch (error) {
       return next(error);
     }
@@ -53,7 +53,7 @@ class VerificationController implements Controller {
         await this.VerificationService.createEmailVerification(user.id);
 
       return res
-        .status(HTTPCodes.OK)
+        .status(StatusCodes.OK)
         .json({ message: 'Successful', verification });
     } catch (error) {
       return next(error);

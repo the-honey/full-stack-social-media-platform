@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validate from '@/resources/auth/auth.validation';
@@ -49,7 +49,7 @@ class AuthController implements Controller {
         .cookie('accessToken', token, {
           httpOnly: true,
         })
-        .status(HTTPCodes.OK)
+        .status(StatusCodes.OK)
         .json({ user, token });
     } catch (error: any) {
       return next(error);
@@ -78,7 +78,7 @@ class AuthController implements Controller {
         .cookie('accessToken', accessToken, {
           httpOnly: true,
         })
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Registered successfully' });
     } catch (error: any) {
       return next(error);
@@ -95,7 +95,7 @@ class AuthController implements Controller {
         secure: true,
         sameSite: 'none',
       })
-      .status(HTTPCodes.OK)
+      .status(StatusCodes.OK)
       .json({ message: 'You have been logged out' });
   };
 }

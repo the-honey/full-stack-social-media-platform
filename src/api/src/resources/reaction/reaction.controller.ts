@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import ReactionService from '@/resources/reaction/reaction.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
@@ -54,7 +54,9 @@ class ReactionController implements Controller {
         reactionType
       );
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', reaction });
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Successful', reaction });
     } catch (error) {
       return next(error);
     }
@@ -71,7 +73,7 @@ class ReactionController implements Controller {
 
       await this.ReactionService.removeReaction(user.id, postId);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+      return res.status(StatusCodes.OK).json({ message: 'Successful' });
     } catch (error) {
       return next(error);
     }
@@ -91,7 +93,7 @@ class ReactionController implements Controller {
         postId
       );
 
-      return res.status(HTTPCodes.OK).json({
+      return res.status(StatusCodes.OK).json({
         message: 'Successful',
         reactionCount: reactions.reactions,
         userReaction: reactions.reaction,

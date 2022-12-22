@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import FollowService from '@/resources/follow/follow.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
@@ -48,7 +48,7 @@ class FollowController implements Controller {
       const follow = await this.FollowService.isFollowing(user.id, username);
 
       return res
-        .status(HTTPCodes.OK)
+        .status(StatusCodes.OK)
         .json({ message: 'Successful', isFollowing: follow });
     } catch (error) {
       return next(error);
@@ -66,7 +66,7 @@ class FollowController implements Controller {
 
       const follow = await this.FollowService.follow(user.id, username);
 
-      return res.status(HTTPCodes.CREATED).json({ message: 'Successful' });
+      return res.status(StatusCodes.CREATED).json({ message: 'Successful' });
     } catch (error) {
       return next(error);
     }
@@ -83,7 +83,7 @@ class FollowController implements Controller {
 
       const unfollow = await this.FollowService.unfollow(user.id, username);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+      return res.status(StatusCodes.OK).json({ message: 'Successful' });
     } catch (error) {
       return next(error);
     }
