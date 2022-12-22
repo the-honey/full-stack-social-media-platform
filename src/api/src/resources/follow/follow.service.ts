@@ -33,6 +33,8 @@ class FollowService {
       });
 
       if (!following) throw createError.NotFound();
+      if (following.id == userId)
+        throw createError.Conflict('You cannot follow yourself');
 
       const count = await this.db.follows.count({
         where: { followerId: userId, followingId: following.id },
