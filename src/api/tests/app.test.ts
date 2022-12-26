@@ -180,7 +180,7 @@ describe('POST /auth/login', () => {
 describe('POST /post/', () => {
   const endpoint = '/api/post/';
 
-  //test('create post without login', async () => {});
+  //test('create post without authentication', async () => {});
 
   // test('empty body', async () => {
   //   const response = await request(app.express).post(endpoint).send({});
