@@ -34,6 +34,7 @@ class App {
       new VerificationController(db),
     ]);
     this.initialiseErrorHandling();
+    this.initialiseDbContext(db);
   }
 
   private initialiseMiddleware(): void {
@@ -56,6 +57,10 @@ class App {
 
   private initialiseErrorHandling(): void {
     this.express.use(ErrorMiddleware);
+  }
+
+  private initialiseDbContext(db: PrismaClient): void {
+    this.express.set('db', db);
   }
 
   public listen(): void {

@@ -3,13 +3,15 @@ import token from '@/utils/token';
 import Token from '@/utils/interfaces/token.interface';
 import createError from '@/utils/helpers/createError';
 import jwt from 'jsonwebtoken';
-import { db } from '@/utils/db';
+import { PrismaClient } from '@prisma/client';
 
 async function authenticatedMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> {
+  const db: PrismaClient = req.app.get('db');
+
   try {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) throw createError.Unauthorised();

@@ -11,9 +11,11 @@ import { PrismaClient } from '@prisma/client';
 class CommentController implements Controller {
   public path = '/comment';
   public router = Router();
+  private db: PrismaClient;
   private CommentService: CommentService;
 
   constructor(db: PrismaClient) {
+    this.db = db;
     this.CommentService = new CommentService(db);
     this.initialiseRoutes();
   }
