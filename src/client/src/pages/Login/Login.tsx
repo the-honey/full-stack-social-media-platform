@@ -23,10 +23,10 @@ const Login = () => {
       <div className="md:rounded-xl max-w-[950px] flex flex-wrap bg-white min-h-[600px] shadow-xl">
         <div className="flex-1 md:rounded-l-xl bg-gradient-to-br from-green-500 to-green-900 p-12 flex flex-col gap-8 text-white">
           <h1 className="text-8xl font-bold">Very Social</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-            alias totam numquam ipsa exercitationem dignissimos, error nam,
-            consequatur.
+          <p className="text-justify">
+            Welcome to our social media platform! Share your thoughts, connect
+            with others, and enjoy your time on our platform. If you have any
+            questions or feedback, let us know. Thanks for joining!
           </p>
           <span className="text-sm">Don't you have an account?</span>
           <Link to="/register">
