@@ -4,23 +4,34 @@ import UserService from '@/resources/user/user.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/user/user.validation';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
+import { PrismaClient } from '@prisma/client';
+import { uploadMiddleware } from '@/middlewares/upload.middleware';
 
 class UserController implements Controller {
   public path = '/user';
   public router = Router();
-  private UserService = new UserService();
+  private UserService: UserService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.UserService = new UserService(db);
     this.initialiseRoutes();
   }
 
   private initialiseRoutes() {
-    this.router.get(this.path + '/id/:userId', this.getUser);
+    this.router.get(
+      this.path + '/id/:username',
+      [authenticatedMiddleware],
+      this.getUser
+    );
 
     this.router.patch(
       this.path,
-      [authenticatedMiddleware, validationMiddleware(validation.editUser)],
+      [
+        authenticatedMiddleware,
+        uploadMiddleware,
+        validationMiddleware(validation.editUser),
+      ],
       this.editUser
     );
 
@@ -29,7 +40,28 @@ class UserController implements Controller {
       [authenticatedMiddleware],
       this.getRecommendedUsers
     );
+
+    this.router.get(
+      this.path + '/newest',
+      [authenticatedMiddleware],
+      this.getNewestUsers
+    );
   }
+
+  private getNewestUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      const { user } = res.locals;
+
+      const users = await this.UserService.getNewestUsers(user.id);
+      return res.status(StatusCodes.OK).json({ message: 'Successful', users });
+    } catch (error) {
+      return next(error);
+    }
+  };
 
   private getUser = async (
     req: Request,
@@ -37,10 +69,10 @@ class UserController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      const { userId } = req.params;
+      const { username } = req.params;
 
-      const user = await this.UserService.getUser(userId);
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', user });
+      const user = await this.UserService.getUser(username);
+      return res.status(StatusCodes.OK).json({ message: 'Successful', user });
     } catch (error) {
       return next(error);
     }
@@ -52,11 +84,20 @@ class UserController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      const { userId } = req.params;
+      const { profileId } = res.locals.user;
+      const { firstName, lastName, description, birthDate } = req.body;
+      const { file } = req;
 
-      const user = await this.UserService.getUser(userId);
+      const user = await this.UserService.editUser(
+        profileId,
+        firstName,
+        lastName,
+        birthDate,
+        description,
+        file?.filename
+      );
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', user });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', user });
     } catch (error) {
       return next(error);
     }
@@ -72,7 +113,7 @@ class UserController implements Controller {
 
       const users = await this.UserService.getRecommendedUsers(user.id);
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', users });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', users });
     } catch (error) {
       return next(error);
     }

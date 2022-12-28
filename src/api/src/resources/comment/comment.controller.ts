@@ -1,38 +1,55 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import Controller from '@/utils/interfaces/controller.interface';
 import CommentService from '@/resources/comment/comment.service';
 import authenticatedMiddleware from '@/middlewares/auth.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import validation from '@/resources/comment/comment.validation';
+import verifiedMiddleware from '@/middlewares/verified.middleware';
+import { PrismaClient } from '@prisma/client';
 
 class CommentController implements Controller {
   public path = '/comment';
   public router = Router();
-  private CommentService = new CommentService();
+  private db: PrismaClient;
+  private CommentService: CommentService;
 
-  constructor() {
+  constructor(db: PrismaClient) {
+    this.db = db;
+    this.CommentService = new CommentService(db);
     this.initialiseRoutes();
   }
 
   private initialiseRoutes() {
-    this.router.get(this.path + '/:postId', this.getComments);
+    this.router.get(
+      this.path + '/:postId',
+      authenticatedMiddleware,
+      this.getComments
+    );
 
     this.router.post(
       this.path + '/:postId',
-      [authenticatedMiddleware, validationMiddleware(validation.addComment)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.addComment),
+      ],
       this.addComment
     );
 
     this.router.patch(
       this.path + '/:commentId',
-      [authenticatedMiddleware, validationMiddleware(validation.editComment)],
+      [
+        authenticatedMiddleware,
+        verifiedMiddleware(),
+        validationMiddleware(validation.editComment),
+      ],
       this.editComment
     );
 
     this.router.delete(
       this.path + '/:commentId',
-      [authenticatedMiddleware],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.deleteComment
     );
   }
@@ -48,7 +65,7 @@ class CommentController implements Controller {
       const comments = await this.CommentService.getComments(postId);
 
       return res
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.OK)
         .json({ message: 'Successful', comments });
     } catch (error) {
       return next(error);
@@ -72,7 +89,7 @@ class CommentController implements Controller {
       );
 
       return res
-        .status(HTTPCodes.CREATED)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Successful', comment });
     } catch (error) {
       return next(error);
@@ -95,7 +112,9 @@ class CommentController implements Controller {
         content
       );
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful', comment });
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Successful', comment });
     } catch (error) {
       return next(error);
     }
@@ -107,12 +126,17 @@ class CommentController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      const { user } = res.locals.user;
+      const { user } = res.locals;
       const { commentId } = req.params;
 
-      await this.CommentService.deleteComment(user.id, commentId);
+      const comment = await this.CommentService.deleteComment(
+        user.id,
+        commentId
+      );
 
-      return res.status(HTTPCodes.OK).json({ message: 'Successful' });
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Successful', comment });
     } catch (error) {
       return next(error);
     }

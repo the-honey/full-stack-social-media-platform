@@ -6,12 +6,17 @@
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "baseUrl": "src",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "baseUrl": "./src",
     "paths": {
+      "@/*": ["*"],
       "@/resources/*": ["resources/*"],
       "@/utils/*": ["utils/*"],
       "@/middlewares/*": ["middlewares/*"]
-    }
+    },
+    "types": ["jest"]
   },
-  "exclude": ["dist", "prisma", "tests"]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["dist", "prisma", "node_modules"]
 }

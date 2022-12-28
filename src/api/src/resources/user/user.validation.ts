@@ -5,9 +5,10 @@ const getUser = Joi.object({
 });
 
 const editUser = Joi.object({
-  firstName: Joi.string().alphanum().min(2).max(30).optional(),
-  lastName: Joi.string().alphanum().min(2).max(30).optional(),
-  description: Joi.string().alphanum().max(300).optional(),
+  firstName: Joi.string().regex(/\D+/).min(2).max(30).optional(),
+  lastName: Joi.string().regex(/\D+/).min(2).max(30).optional(),
+  description: Joi.string().min(0).max(300).optional(),
+  birthDate: Joi.date().optional(),
 });
 
 export default { getUser, editUser };

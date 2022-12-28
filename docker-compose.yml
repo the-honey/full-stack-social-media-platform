@@ -1,19 +1,38 @@
-version: '3'
+version: '3.7'
 services:
   postgres:
+    hostname: postgres
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: prisma
+      POSTGRES_DB: social
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
     ports:
-      - '5432:5432'
+      - 5432:5432
 
-  adminer:
-    image: adminer:latest
+  api:
+    build:
+      context: ./src/api
+      dockerfile: Dockerfile.dev
+    restart: always
+    volumes:
+      - ./src/api/src:/usr/app/src
+      - ./src/client/public:/usr/app/client/public
+    ports:
+      - 3000:3000
     depends_on:
       - postgres
+
+  client:
+    build:
+      context: ./src/client
+      dockerfile: Dockerfile.dev
     restart: always
+    volumes:
+      - ./src/client/src:/usr/app/src
+      - ./src/client/public:/usr/app/public
     ports:
-      - '80:8080'
+      - 80:5000
+    depends_on:
+      - api

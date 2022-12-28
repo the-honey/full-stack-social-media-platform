@@ -1,4 +1,4 @@
-import { cleanEnv, str, port } from 'envalid';
+import { cleanEnv, str, port, num } from 'envalid';
 
 function validateEnv(): void {
   cleanEnv(process.env, {
@@ -8,6 +8,7 @@ function validateEnv(): void {
     DATABASE_URL: str(),
     JWT_SECRET: str(),
     PORT: port({ default: 3000 }),
+    MAX_FILE_SIZE: num(),
   });
 }
 

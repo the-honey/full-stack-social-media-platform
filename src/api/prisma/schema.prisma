@@ -21,13 +21,13 @@ model User {
   reactions         Reaction[]
   followedBy        Follows[]          @relation("following")
   following         Follows[]          @relation("follower")
+  createdAt         DateTime           @default(now())
 }
 
 model EmailVerification {
-  id        Int      @id @default(autoincrement())
+  token     String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @unique
-  token     String   @unique @default(uuid())
   createdAt DateTime @default(now())
 }
 
@@ -37,7 +37,7 @@ model Profile {
   firstName     String
   lastName      String
   description   String?
-  brithDate     DateTime
+  birthDate     DateTime
   profilePicUrl String?
 }
 
@@ -76,9 +76,9 @@ model Comment {
 model Reaction {
   createdAt DateTime     @updatedAt
   type      ReactionType
-  author    User         @relation(fields: [authorId], references: [id])
+  author    User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  post      Post         @relation(fields: [postId], references: [id])
+  post      Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
 
   @@id([authorId, postId])
@@ -88,7 +88,7 @@ model Media {
   id       String    @id @default(uuid())
   mediaUrl String
   type     MediaType
-  Post     Post      @relation(fields: [postId], references: [id])
+  Post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId   String    @unique
 }
 

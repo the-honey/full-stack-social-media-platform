@@ -1,4 +1,4 @@
-import { HTTPCodes } from '@/utils/helpers/response';
+import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import Joi from 'joi';
 
@@ -17,13 +17,13 @@ function validationMiddleware(schema: Joi.Schema): RequestHandler {
     try {
       const value = await schema.validateAsync(req.body, validationOptions);
       req.body = value;
-      next();
+      return next();
     } catch (e: any) {
       const errors: string[] = [];
       e.details.forEach((error: Joi.ValidationErrorItem) => {
         errors.push(error.message);
       });
-      return res.status(HTTPCodes.BAD_REQUEST).json({ errors: errors });
+      return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors });
     }
   };
 }
