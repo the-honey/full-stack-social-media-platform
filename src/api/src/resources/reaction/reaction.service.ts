@@ -12,9 +12,19 @@ class ReactionService {
   public async addReaction(
     userId: string,
     postId: string,
-    reactionType: ReactionType
+    reactionType: ReactionType = ReactionType.LIKE
   ) {
     try {
+      const post = await this.db.post.findFirst({ where: { id: postId } });
+
+      if (!post) throw createError.NotFound();
+
+      const getReaction = await this.db.reaction.findFirst({
+        where: { postId: postId, authorId: userId },
+      });
+
+      if (getReaction) throw createError.Conflict();
+
       const reaction = await this.db.reaction.upsert({
         create: { authorId: userId, postId: postId, type: reactionType },
         update: { type: reactionType },
@@ -23,19 +33,21 @@ class ReactionService {
 
       return reaction;
     } catch (error) {
+      if (error instanceof HttpException) throw error;
+
       throw error;
     }
   }
 
   public async removeReaction(userId: string, postId: string) {
     try {
-      const reaction = await this.db.reaction.deleteMany({
-        where: { authorId: userId, postId: postId },
+      const reaction = await this.db.reaction.delete({
+        where: { authorId_postId: { authorId: userId, postId: postId } },
       });
 
-      if (reaction.count != 0) return reaction;
+      if (!reaction) throw createError.NotFound();
 
-      throw createError.NotFound();
+      return reaction;
     } catch (error) {
       if (error instanceof HttpException) throw error;
 

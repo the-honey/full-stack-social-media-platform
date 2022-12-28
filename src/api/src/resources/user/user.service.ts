@@ -1,7 +1,6 @@
 import HttpException from '@/utils/exceptions/http.exception';
 import createError from '@/utils/helpers/createError';
 import { PrismaClient } from '@prisma/client';
-import dayjs from 'dayjs';
 
 class UserService {
   private db: PrismaClient;
@@ -83,7 +82,7 @@ class UserService {
       return profile;
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw error;
+      throw createError.InternalServerError;
     }
   }
 

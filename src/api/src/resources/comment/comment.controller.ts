@@ -21,7 +21,11 @@ class CommentController implements Controller {
   }
 
   private initialiseRoutes() {
-    this.router.get(this.path + '/:postId', this.getComments);
+    this.router.get(
+      this.path + '/:postId',
+      authenticatedMiddleware,
+      this.getComments
+    );
 
     this.router.post(
       this.path + '/:postId',
@@ -61,7 +65,7 @@ class CommentController implements Controller {
       const comments = await this.CommentService.getComments(postId);
 
       return res
-        .status(StatusCodes.CREATED)
+        .status(StatusCodes.OK)
         .json({ message: 'Successful', comments });
     } catch (error) {
       return next(error);
@@ -77,8 +81,6 @@ class CommentController implements Controller {
       const { user } = res.locals;
       const { postId } = req.params;
       const { content } = req.body;
-
-      console.log(user);
 
       const comment = await this.CommentService.addComment(
         user.id,
@@ -124,12 +126,17 @@ class CommentController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      const { user } = res.locals.user;
+      const { user } = res.locals;
       const { commentId } = req.params;
 
-      await this.CommentService.deleteComment(user.id, commentId);
+      const comment = await this.CommentService.deleteComment(
+        user.id,
+        commentId
+      );
 
-      return res.status(StatusCodes.OK).json({ message: 'Successful' });
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Successful', comment });
     } catch (error) {
       return next(error);
     }

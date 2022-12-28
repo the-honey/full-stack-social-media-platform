@@ -140,9 +140,7 @@ class PostController implements Controller {
       const { content } = req.body;
 
       const post = await this.PostService.editPost(user.id, postId, content);
-      return res
-        .status(StatusCodes.CREATED)
-        .json({ message: 'Successful', post });
+      return res.status(StatusCodes.OK).json({ message: 'Successful', post });
     } catch (error) {
       return next(error);
     }

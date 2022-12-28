@@ -11,6 +11,14 @@ class CommentService {
 
   public async getComments(postId: string) {
     try {
+      const post = await this.db.post.findFirst({
+        where: {
+          id: postId,
+        },
+      });
+
+      if (!post) throw createError.NotFound();
+
       const comments = await this.db.comment.findMany({
         include: {
           author: {
@@ -26,18 +34,26 @@ class CommentService {
 
       return comments;
     } catch (error) {
+      if (error instanceof HttpException) throw error;
+
       throw createError.InternalServerError();
     }
   }
 
   public async addComment(userId: string, postId: string, content: string) {
     try {
+      const post = await this.db.post.findFirst({ where: { id: postId } });
+
+      if (!post) throw createError.NotFound();
+
       const comment = await this.db.comment.create({
         data: { authorId: userId, postId: postId, content: content },
       });
 
       return comment;
     } catch (error) {
+      if (error instanceof HttpException) throw error;
+
       throw createError.InternalServerError();
     }
   }
@@ -56,8 +72,6 @@ class CommentService {
         data: { content: content },
         where: { id: commentId },
       });
-
-      console.log(comment);
 
       return comment;
     } catch (error) {

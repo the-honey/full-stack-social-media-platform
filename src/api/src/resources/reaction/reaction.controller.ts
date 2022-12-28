@@ -21,11 +21,7 @@ class ReactionController implements Controller {
   private initialiseRoutes() {
     this.router.post(
       this.path,
-      [
-        authenticatedMiddleware,
-        verifiedMiddleware(),
-        validationMiddleware(validation.addReaction),
-      ],
+      [authenticatedMiddleware, verifiedMiddleware()],
       this.addReaction
     );
 
@@ -55,7 +51,7 @@ class ReactionController implements Controller {
       );
 
       return res
-        .status(StatusCodes.OK)
+        .status(StatusCodes.CREATED)
         .json({ message: 'Successful', reaction });
     } catch (error) {
       return next(error);

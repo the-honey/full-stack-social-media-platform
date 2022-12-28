@@ -65,8 +65,6 @@ class FollowService {
         },
       });
 
-      console.log(JSON.stringify(following));
-
       if (!following) throw createError.NotFound();
 
       const unfollow = await this.db.follows.delete({
