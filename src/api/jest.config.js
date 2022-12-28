@@ -13,6 +13,6 @@ module.exports = {
     '@/utils/(.*)': '<rootDir>/src/utils/$1',
     '@/resources/(.*)': '<rootDir>/src/resources/$1',
   },
-  collectCoverage: false,
+  collectCoverage: true,
   coverageDirectory: './coverage',
 };
