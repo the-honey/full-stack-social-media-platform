@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "ts-node-dev --exit-child --respawn -r tsconfig-paths/register ./src/index.ts",
+    "dev": "prisma migrate dev && ts-node-dev --exit-child --respawn -r tsconfig-paths/register ./src/index.ts",
     "clean": "rm -r dist/",
     "build": "tsc",
     "test": "jest"
