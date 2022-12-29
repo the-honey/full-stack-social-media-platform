@@ -15,20 +15,6 @@ import {
 } from './data';
 import createError from '@/utils/helpers/createError';
 import bcrypt from 'bcryptjs';
-// import authenticatedMiddleware from '@/middlewares/auth.middleware';
-
-// const mockMiddleware = (req: Request, res: Response, next: NextFunction) => {
-//   const { user } = req.body;
-//   if (!user) throw createError.Unauthorised();
-//   res.locals.user = user;
-//   next();
-// };
-
-// jest.mock('@/middlewares/auth.middleware', () => {
-//   return {
-//     default: jest.fn(mockMiddleware),
-//   };
-// });
 
 jest.mock('@/middlewares/auth.middleware', () =>
   jest.fn((req: Request, res: Response, next: NextFunction) => {
