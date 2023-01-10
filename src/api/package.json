@@ -4,10 +4,12 @@
   "description": "",
   "type": "commonjs",
   "scripts": {
-    "dev": "ts-node-dev --exit-child --respawn -r tsconfig-paths/register -r dotenv/config src/index.ts dotenv_config_path=.env.development",
-    "start": "node -r dotenv/config -r tsconfig-paths/register dist/index.js dotenv_config_path=.env.production",
+    "dev": "dotenv -e .env.development -- prisma migrate dev && ts-node-dev --exit-child --respawn -r tsconfig-paths/register -r dotenv/config src/index.ts dotenv_config_path=.env.development",
+    "start": "dotenv -e .env.production -- prisma migrate deploy && node -r dotenv/config -r tsconfig-paths/register dist/index.js dotenv_config_path=.env.production",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
     "clean": "rm -r dist/",
-    "build": "tsc",
+    "build": "tsc --build tsconfig.build.json",
     "test": "jest"
   },
   "prisma": {
@@ -23,6 +25,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.3",
+    "dotenv-cli": "^6.0.0",
     "envalid": "^7.3.1",
     "express": "^4.18.2",
     "helmet": "^6.0.0",

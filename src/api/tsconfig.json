@@ -16,7 +16,5 @@
       "@/middlewares/*": ["middlewares/*"]
     },
     "types": ["jest"]
-  },
-  "include": ["src/**/*"],
-  "exclude": ["dist", "prisma", "node_modules"]
+  }
 }
