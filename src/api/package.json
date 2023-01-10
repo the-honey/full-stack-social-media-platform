@@ -4,8 +4,8 @@
   "description": "",
   "type": "commonjs",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "prisma migrate dev && ts-node-dev --exit-child --respawn -r tsconfig-paths/register ./src/index.ts",
+    "dev": "ts-node-dev --exit-child --respawn -r tsconfig-paths/register -r dotenv/config src/index.ts dotenv_config_path=.env.development",
+    "start": "node -r dotenv/config -r tsconfig-paths/register dist/index.js dotenv_config_path=.env.production",
     "clean": "rm -r dist/",
     "build": "tsc",
     "test": "jest"
