@@ -4,10 +4,9 @@ WORKDIR /usr/app
 
 COPY package*.json ./
 COPY prisma ./prisma/
-COPY .env ./
+COPY .env.development ./
 
 RUN npm install
-RUN npx prisma migrate dev
 RUN npx prisma generate
 
 COPY . .

@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "allowJs": true,
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "paths": {
       "@/*": ["*"],
       "@/resources/*": ["resources/*"],
@@ -16,7 +16,5 @@
       "@/middlewares/*": ["middlewares/*"]
     },
     "types": ["jest"]
-  },
-  "include": ["src/**/*", "tests/**/*"],
-  "exclude": ["dist", "prisma", "node_modules"]
+  }
 }
